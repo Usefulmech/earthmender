@@ -46,4 +46,3 @@ Then go back to the app root and start Next.js.
 - frontend and local data guide: `docs/SETUP.md`
 - Appwrite backend database/storage setup script: `setup-appwrite.js`
 - detector service notes: `detector_service/README.md`
-
