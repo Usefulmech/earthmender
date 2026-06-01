@@ -1,0 +1,243 @@
+@import "tailwindcss";
+
+:root {
+  --background: #ffffff;
+  --panel: #ffffff;
+  --foreground: #000000;
+  --muted: #666666;
+  --muted-light: #999999;
+  --border: #eaeaea;
+  --border-light: #f5f5f5;
+  --accent: #10B981;
+  --accent-hover: #059669;
+  --accent-light: #ecfdf5;
+  --accent-surface: #fafafa;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-earth-body);
+  --font-display: var(--font-earth-display);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  background-color: var(--background);
+}
+
+body {
+  background-color: var(--background);
+  background-image: none;
+  color: var(--foreground);
+  font-family: var(--font-earth-body), ui-sans-serif, system-ui, -apple-system, sans-serif;
+  text-rendering: optimizeLegibility;
+  font-kerning: normal;
+  font-variant-ligatures: contextual common-ligatures;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+  text-decoration: none;
+}
+
+::selection {
+  background: var(--foreground);
+  color: #ffffff;
+}
+
+/* ─── Panels (Linear-Style Minimalist) ─── */
+
+.surface-panel {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.02);
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.surface-panel:hover {
+  border-color: #d4d4d4;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+}
+
+/* ─── Eyebrow label ─── */
+
+.eyebrow {
+  display: inline-flex;
+  width: fit-content;
+  border-radius: 6px;
+  background: var(--accent-surface);
+  padding: 0.35rem 0.6rem;
+  font-size: 0.75rem;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  color: var(--muted);
+  border: 1px solid var(--border);
+}
+
+.text-balance {
+  text-wrap: balance;
+}
+
+/* ─── Map ─── */
+
+.map-marker {
+  display: flex;
+  height: 1.5rem;
+  width: 1.5rem;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  border: 2px solid #fff;
+  background: var(--foreground);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  color: #fff;
+  font-size: 0.65rem;
+  font-weight: 600;
+  line-height: 1;
+}
+
+.map-shell .leaflet-container {
+  height: 100%;
+  width: 100%;
+  border-radius: 12px;
+  z-index: 0;
+}
+
+.map-shell .leaflet-popup-content-wrapper {
+  border-radius: 10px;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.12);
+  border: 1px solid var(--border);
+}
+
+.map-shell .leaflet-popup-content {
+  margin: 1rem;
+  font-family: var(--font-earth-body), sans-serif;
+  color: var(--foreground);
+}
+
+/* ─── Animations ─── */
+
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fade-in-up 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.animate-delay-100 { animation-delay: 0.1s; }
+.animate-delay-200 { animation-delay: 0.2s; }
+.animate-delay-300 { animation-delay: 0.3s; }
+.animate-delay-400 { animation-delay: 0.4s; }
+
+/* ─── Sleek Minimalist Buttons ─── */
+
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  background: var(--foreground);
+  padding: 0.65rem 1.2rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #fff;
+  transition: all 0.15s ease;
+  cursor: pointer;
+  border: 1px solid var(--foreground);
+}
+
+.btn-primary:hover {
+  background: #222222;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
+}
+
+.btn-primary:active {
+  transform: scale(0.97);
+}
+
+.btn-primary:disabled {
+  cursor: not-allowed;
+  background: var(--muted-light);
+  border-color: var(--muted-light);
+}
+
+.btn-outline {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--panel);
+  padding: 0.65rem 1.2rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--foreground);
+  transition: all 0.15s ease;
+  cursor: pointer;
+}
+
+.btn-outline:hover {
+  border-color: #bbbbbb;
+  background: var(--accent-surface);
+}
+
+.btn-outline:active {
+  transform: scale(0.97);
+}
+
+/* ─── True Centered Pop-up Modal ─── */
+
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(4px);
+  padding: 1rem;
+  animation: fade-in 0.2s ease forwards;
+}
+
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.modal-panel {
+  width: 100%;
+  max-width: 24rem;
+  background: var(--panel);
+  border-radius: 16px;
+  border: 1px solid var(--border);
+  padding: 2rem;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08);
+  animation: pop-in 0.3s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes pop-in {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}

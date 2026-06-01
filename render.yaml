@@ -1,0 +1,16 @@
+services:
+  - type: web
+    name: earthmender-detector
+    runtime: python
+    plan: free
+    rootDir: detector_service
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.9
+      - key: EARTHMENDER_MODEL_URL
+        sync: false
+      - key: EARTHMENDER_MODEL_PATH
+        sync: false
+
