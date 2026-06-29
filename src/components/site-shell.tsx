@@ -126,7 +126,7 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
         </div>
       </header>
 
-      <main className="relative z-10 mx-auto flex min-h-screen w-full max-w-6xl flex-1 flex-col px-4 pb-28 pt-24 sm:px-6 lg:px-8">
+      <main className="relative z-10 mx-auto flex min-h-screen w-full max-w-6xl flex-1 flex-col px-4 pb-16 pt-24 sm:px-6 sm:pb-12 lg:px-8">
         {children}
       </main>
 

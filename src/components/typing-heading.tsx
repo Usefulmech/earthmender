@@ -10,33 +10,35 @@ export function TypingHeading() {
   const [isTypingLine1, setIsTypingLine1] = useState(true);
 
   useEffect(() => {
-    let index = 0;
+    let currentLength = 0;
+    setDisplayedLine1("");
     const timer = setInterval(() => {
-      setDisplayedLine1((prev) => prev + line1.charAt(index));
-      index++;
-      if (index === line1.length) {
+      currentLength++;
+      setDisplayedLine1(line1.substring(0, currentLength));
+      if (currentLength === line1.length) {
         clearInterval(timer);
         setIsTypingLine1(false);
       }
-    }, 70); 
+    }, 150); 
 
     return () => clearInterval(timer);
-  }, [line1]);
+  }, []);
 
   useEffect(() => {
     if (isTypingLine1) return;
     
-    let index = 0;
+    let currentLength = 0;
+    setDisplayedLine2("");
     const timer = setInterval(() => {
-      setDisplayedLine2((prev) => prev + line2.charAt(index));
-      index++;
-      if (index === line2.length) {
+      currentLength++;
+      setDisplayedLine2(line2.substring(0, currentLength));
+      if (currentLength === line2.length) {
         clearInterval(timer);
       }
-    }, 70);
+    }, 150);
 
     return () => clearInterval(timer);
-  }, [isTypingLine1, line2]);
+  }, [isTypingLine1]);
 
   return (
     <h1 className="font-display text-[4rem] font-bold leading-[1.05] tracking-tighter sm:text-[6.5rem]">
