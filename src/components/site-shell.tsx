@@ -70,7 +70,7 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
 
   async function handleSignOut() {
     await logout();
-    router.push("/");
+    window.location.href = "/";
   }
 
   function isActive(current: string, target: string) {
@@ -109,7 +109,7 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
               <button
                 type="button"
                 onClick={handleSignOut}
-                className="btn-outline !py-2 !px-4 !text-xs uppercase tracking-wider"
+                className="btn-outline !py-1.5 !px-3 !text-[0.65rem] sm:!text-xs uppercase tracking-wider whitespace-nowrap"
               >
                 Sign out
               </button>

@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Logo } from "@/components/logo";
+import { TypingHeading } from "@/components/typing-heading";
 
 function GridBackground() {
   return (
@@ -19,23 +20,20 @@ function GridBackground() {
 export default function Home() {
   return (
     <div className="min-h-screen text-[var(--foreground)] selection:bg-[var(--foreground)] selection:text-white">
-      <section className="relative overflow-hidden px-6 pt-4 pb-20 sm:px-8 sm:pt-6 sm:pb-32 flex flex-col items-center justify-start min-h-[70vh]">
+      <section className="relative overflow-hidden px-6 pt-0 pb-12 sm:px-8 sm:pt-2 sm:pb-16 flex flex-col items-center justify-start min-h-[50vh]">
         <GridBackground />
         
         {/* Soft centered glow */}
-        <div className="absolute top-32 left-1/2 -translate-x-1/2 w-[700px] h-[300px] bg-[var(--accent)] opacity-[0.04] blur-[100px] rounded-full pointer-events-none" />
+        <div className="absolute top-20 left-1/2 -translate-x-1/2 w-[700px] h-[300px] bg-[var(--accent)] opacity-[0.04] blur-[100px] rounded-full pointer-events-none" />
 
-        <div className="relative mx-auto flex max-w-4xl flex-col items-center text-center animate-fade-in-up z-10 w-full mt-4">
+        <div className="relative mx-auto flex max-w-4xl flex-col items-center text-center animate-fade-in-up z-10 w-full mt-2">
           {/* "Live network" badge — pushed flush to top */}
           <div className="eyebrow mb-6 flex items-center gap-2">
             <span className="w-2 h-2 rounded-full bg-[var(--accent)] animate-pulse" />
             Live network
           </div>
 
-          <h1 className="font-display text-[4rem] font-bold leading-[1.05] tracking-tighter sm:text-[6.5rem]">
-            Healing together. <br />
-            <span className="text-[var(--muted)]">Mending forever.</span>
-          </h1>
+          <TypingHeading />
 
           <p className="mt-8 max-w-2xl text-xl leading-relaxed text-[var(--muted)]">
             A vibrant, community-powered platform where every voice matters and every hand helps mend our planet. No noise, just clean action.
@@ -58,7 +56,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="bg-[var(--border-light)] px-6 py-20 sm:px-8 sm:py-32 relative">
+      <section className="bg-[var(--border-light)] px-6 py-12 sm:px-8 sm:py-20 relative">
         <div className="mx-auto max-w-6xl relative z-10">
           <div className="mx-auto max-w-3xl text-center animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
             <h2 className="font-display text-4xl font-bold tracking-tight sm:text-5xl">
@@ -69,7 +67,7 @@ export default function Home() {
             </p>
           </div>
 
-          <div className="mt-16 grid gap-6 md:grid-cols-3">
+          <div className="mt-10 grid gap-6 md:grid-cols-3">
             {[
               {
                 icon: <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>,

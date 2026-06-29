@@ -77,7 +77,7 @@ export function AuthModal({ isOpen, onClose }: AuthModalProps) {
         const newProfile: Omit<UserProfile, "$id"> = {
           userId: user.$id,
           role,
-          trustScore: 100,
+          trustScore: 50,
           companyName: role === "operator" ? companyName : undefined,
           coverageLGA: role === "operator" ? coverageLGA : undefined,
         };
