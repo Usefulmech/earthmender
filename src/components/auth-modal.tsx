@@ -18,13 +18,9 @@ export function AuthModal({ isOpen, onClose }: AuthModalProps) {
   const { user, profile, login, refreshProfile } = useAuth();
   const router = useRouter();
   
-  const [step, setStep] = useState<1 | 2 | 3>(1);
+  const [step, setStep] = useState<1 | 2>(1);
   const [selectedRole, setSelectedRole] = useState<UserRole | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
-
-  // Form states for Operator onboarding
-  const [companyName, setCompanyName] = useState("");
-  const [coverageLGA, setCoverageLGA] = useState("");
 
   function handleCancel() {
     window.sessionStorage.removeItem(ROLE_STORAGE_KEY);
@@ -40,11 +36,7 @@ export function AuthModal({ isOpen, onClose }: AuthModalProps) {
         if (needsOnboarding) {
           if (savedRole) {
             setSelectedRole(savedRole);
-            if (savedRole === "mender") {
-              handleProvisionProfile("mender");
-            } else {
-              setStep(3);
-            }
+            handleProvisionProfile(savedRole);
           } else if (!profile) {
             setStep(1);
             setSelectedRole(null);
@@ -78,8 +70,6 @@ export function AuthModal({ isOpen, onClose }: AuthModalProps) {
           userId: user.$id,
           role,
           trustScore: 50,
-          companyName: role === "operator" ? companyName : undefined,
-          coverageLGA: role === "operator" ? coverageLGA : undefined,
         };
         await authService.createProfile(newProfile);
       }
@@ -103,11 +93,7 @@ export function AuthModal({ isOpen, onClose }: AuthModalProps) {
     
     if (user) {
       if (!profile || role !== profile.role) {
-        if (role === "mender") {
-          handleProvisionProfile("mender");
-        } else {
-          setStep(3);
-        }
+        handleProvisionProfile(role);
       } else {
         // Same role, just close
         window.sessionStorage.removeItem(ROLE_STORAGE_KEY);
@@ -201,59 +187,6 @@ export function AuthModal({ isOpen, onClose }: AuthModalProps) {
                {!(user && !profile) && (
                  <button onClick={handleCancel} className="text-sm font-medium text-[var(--muted)] hover:text-[var(--foreground)] cursor-pointer">Cancel</button>
                )}
-            </div>
-          </div>
-        )}
-
-        {step === 3 && (
-          <div className="animate-fade-in-up">
-            <div className="flex justify-center mb-6">
-               <BrandMark />
-            </div>
-            <h2 className="font-display text-xl font-bold tracking-tight text-[var(--foreground)] text-center">
-              Complete Profile
-            </h2>
-            <p className="mt-1 text-sm text-[var(--muted)] text-center">
-              Tell us a bit more about your operation.
-            </p>
-
-            <div className="mt-6 space-y-4">
-              <div>
-                <label className="block text-xs font-medium text-[var(--muted)] mb-1">Company Name</label>
-                <input 
-                  autoFocus
-                  type="text" 
-                  value={companyName}
-                  onChange={(e) => setCompanyName(e.target.value)}
-                  className="w-full px-4 py-2 bg-[var(--background)] border border-[var(--border)] rounded-lg text-sm focus:outline-none focus:border-[var(--foreground)]"
-                  placeholder="EarthKeepers Inc."
-                />
-              </div>
-              <div>
-                <label className="block text-xs font-medium text-[var(--muted)] mb-1">Coverage Zone (LGA)</label>
-                <input 
-                  type="text" 
-                  value={coverageLGA}
-                  onChange={(e) => setCoverageLGA(e.target.value)}
-                  className="w-full px-4 py-2 bg-[var(--background)] border border-[var(--border)] rounded-lg text-sm focus:outline-none focus:border-[var(--foreground)]"
-                  placeholder="Lagos Mainland"
-                />
-              </div>
-
-              <div className="flex gap-3">
-                <button
-                  disabled={!companyName || !coverageLGA || isSubmitting}
-                  onClick={() => handleProvisionProfile("operator")}
-                  className="flex-1 py-3 bg-[var(--foreground)] text-white rounded-xl text-sm font-bold hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer"
-                >
-                  {isSubmitting ? "Setting up..." : "Finish Onboarding"}
-                </button>
-                {profile && (
-                  <button onClick={handleCancel} className="px-4 py-3 border border-[var(--border)] text-[var(--foreground)] rounded-xl text-sm font-bold hover:bg-[var(--border-light)] transition-colors cursor-pointer">
-                    Cancel
-                  </button>
-                )}
-              </div>
             </div>
           </div>
         )}

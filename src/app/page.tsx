@@ -20,11 +20,19 @@ function GridBackground() {
 export default function Home() {
   return (
     <div className="min-h-screen text-[var(--foreground)] selection:bg-[var(--foreground)] selection:text-white">
-      <section className="relative overflow-hidden px-6 pt-0 pb-12 sm:px-8 sm:pt-2 sm:pb-16 flex flex-col items-center justify-start min-h-[50vh]">
+      <section className="relative overflow-hidden px-6 pt-0 pb-12 sm:px-8 sm:pt-2 sm:pb-16 flex flex-col items-center justify-start min-h-[60vh]">
+        
+        {/* Background Image & Gradient Overlay */}
+        <div 
+          className="absolute inset-0 z-0 opacity-[0.35] bg-cover bg-center bg-no-repeat"
+          style={{ backgroundImage: "url('/hero-bg.png')" }} 
+        />
+        <div className="absolute inset-0 z-0 bg-gradient-to-b from-[var(--background)]/20 via-[var(--background)]/50 to-[var(--background)] pointer-events-none" />
+        
         <GridBackground />
         
         {/* Soft centered glow */}
-        <div className="absolute top-20 left-1/2 -translate-x-1/2 w-[700px] h-[300px] bg-[var(--accent)] opacity-[0.04] blur-[100px] rounded-full pointer-events-none" />
+        <div className="absolute top-20 left-1/2 -translate-x-1/2 w-[700px] h-[300px] bg-[var(--accent)] opacity-[0.08] blur-[100px] rounded-full pointer-events-none" />
 
         <div className="relative mx-auto flex max-w-4xl flex-col items-center text-center animate-fade-in-up z-10 w-full mt-2">
           {/* "Live network" badge — pushed flush to top */}
@@ -35,8 +43,8 @@ export default function Home() {
 
           <TypingHeading />
 
-          <p className="mt-8 max-w-2xl text-xl leading-relaxed text-[var(--muted)]">
-            A vibrant, community-powered platform where every voice matters and every hand helps mend our planet. No noise, just clean action.
+          <p className="mt-8 max-w-4xl text-xl leading-relaxed text-[var(--foreground)] font-medium bg-white/40 backdrop-blur-md px-8 py-4 rounded-2xl border border-white/50 shadow-sm">
+            A vibrant, community-powered platform where every voice matters <br className="hidden sm:block" /> and every hand helps mend our planet. No noise, just clean action.
           </p>
 
           <div className="mt-12 flex flex-col sm:flex-row justify-center gap-4 w-full sm:w-auto">
@@ -57,7 +65,7 @@ export default function Home() {
       </section>
 
       <section className="bg-[var(--border-light)] px-6 py-12 sm:px-8 sm:py-20 relative">
-        <div className="mx-auto max-w-6xl relative z-10">
+        <div className="mx-auto w-full relative z-10">
           <div className="mx-auto max-w-3xl text-center animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
             <h2 className="font-display text-4xl font-bold tracking-tight sm:text-5xl">
               Built for precision

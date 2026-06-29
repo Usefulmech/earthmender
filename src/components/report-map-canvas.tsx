@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   MapContainer,
   Marker,
@@ -8,6 +8,7 @@ import {
   TileLayer,
   useMap,
   ZoomControl,
+  Polyline,
 } from "react-leaflet";
 import { divIcon, type LatLngExpression } from "leaflet";
 
@@ -118,6 +119,53 @@ export function ReportMapCanvas({
     [groups, selectedGroupId],
   );
 
+  const [routePath, setRoutePath] = useState<[number, number][] | null>(null);
+  const [routingState, setRoutingState] = useState<"idle" | "loading" | "error">("idle");
+  const [routingError, setRoutingError] = useState<string | null>(null);
+
+  const handleGetDirections = (destLat: number, destLon: number) => {
+    if (!navigator.geolocation) {
+      setRoutingState("error");
+      setRoutingError("Geolocation is not supported by your browser.");
+      return;
+    }
+    
+    setRoutingState("loading");
+    setRoutingError(null);
+    navigator.geolocation.getCurrentPosition(
+      async (position) => {
+        const userLat = position.coords.latitude;
+        const userLon = position.coords.longitude;
+        
+        try {
+          const res = await fetch(
+            `https://router.project-osrm.org/route/v1/driving/${userLon},${userLat};${destLon},${destLat}?overview=full&geometries=geojson`
+          );
+          const data = await res.json();
+          if (data.routes && data.routes.length > 0) {
+            const coordinates = data.routes[0].geometry.coordinates;
+            // GeoJSON gives [lng, lat], Leaflet Polyline needs [lat, lng]
+            const latLngs = coordinates.map((coord: [number, number]) => [coord[1], coord[0]]);
+            setRoutePath(latLngs as [number, number][]);
+            setRoutingState("idle");
+          } else {
+            setRoutingState("error");
+            setRoutingError("Could not find a route.");
+          }
+        } catch (error) {
+          console.error("Routing error:", error);
+          setRoutingState("error");
+          setRoutingError("Failed to fetch route.");
+        }
+      },
+      (error) => {
+        console.error("Geolocation error:", error);
+        setRoutingState("error");
+        setRoutingError("Could not get your location.");
+      }
+    );
+  };
+
   const initialCenter: LatLngExpression = selected
     ? [selected.latitude, selected.longitude]
     : [6.5244, 3.3792];
@@ -136,6 +184,10 @@ export function ReportMapCanvas({
       />
       <ZoomControl position="bottomright" />
       <FocusMarker selected={selected} />
+      
+      {routePath && (
+        <Polyline positions={routePath} color="#15803d" weight={5} opacity={0.8} />
+      )}
 
       {groups.map((group) => (
         <Marker
@@ -145,11 +197,25 @@ export function ReportMapCanvas({
           eventHandlers={{ click: () => onSelectGroup(group.id) }}
         >
           <Popup>
-            <div className="space-y-1 py-1">
-              <p className="font-semibold">{group.locationLabel}</p>
-              <p className="text-sm" style={{ color: "#666" }}>
-                {group.count} report{group.count > 1 ? "s" : ""} in zone
-              </p>
+            <div className="space-y-2 py-1 min-w-[140px]">
+              <div>
+                <p className="font-semibold">{group.locationLabel}</p>
+                <p className="text-sm" style={{ color: "#666" }}>
+                  {group.count} report{group.count > 1 ? "s" : ""} in zone
+                </p>
+              </div>
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleGetDirections(group.latitude, group.longitude);
+                }}
+                className="btn-outline w-full px-3 py-1.5 text-xs rounded-full border-[var(--border)] mt-2"
+                disabled={routingState === "loading"}
+              >
+                {routingState === "loading" ? "Routing..." : "Get Directions"}
+              </button>
+              {routingError && <p className="text-xs text-red-500 mt-1">{routingError}</p>}
             </div>
           </Popup>
         </Marker>
@@ -175,6 +241,18 @@ export function ReportMapCanvas({
                       </span>
                     ))}
                   </div>
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleGetDirections(hub.coordinates![0], hub.coordinates![1]);
+                    }}
+                    className="btn-outline w-full px-3 py-1.5 text-xs rounded-full border-[var(--border)] mt-3"
+                    disabled={routingState === "loading"}
+                  >
+                    {routingState === "loading" ? "Routing..." : "Get Directions"}
+                  </button>
+                  {routingError && <p className="text-xs text-red-500 mt-1">{routingError}</p>}
                 </div>
               </Popup>
             </Marker>

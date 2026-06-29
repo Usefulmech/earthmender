@@ -81,38 +81,50 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
   return (
     <div className="relative min-h-screen">
       <header className="fixed left-0 top-0 z-50 w-full border-b border-[var(--border)] bg-[rgba(255,255,255,0.95)] backdrop-blur-md">
-        <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3 sm:px-6 lg:px-8">
+        <div className="mx-auto flex w-full items-center justify-between gap-4 px-4 py-3 sm:px-6 lg:px-12">
           <Link href={homeHref} className="transition-opacity hover:opacity-80">
             <BrandMark />
           </Link>
 
           <nav className="hidden items-center gap-8 md:flex">
-            {navItems.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={`inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wider transition-colors ${
-                  isActive(pathname, item.href)
-                    ? "text-[var(--foreground)]"
-                    : "text-[var(--muted)] hover:text-[var(--foreground)]"
-                }`}
-              >
-                <NavIcon name={item.icon} className="h-4 w-4" />
-                <span>{item.label}</span>
-              </Link>
-            ))}
+            {navItems.map((item) => {
+              const active = isActive(pathname, item.href);
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className={`relative inline-flex items-center gap-2 py-2 text-xs font-semibold uppercase tracking-wider transition-colors ${
+                    active
+                      ? "text-[var(--foreground)] after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-full after:bg-[var(--accent)]"
+                      : "text-[var(--muted)] hover:text-[var(--foreground)] after:absolute after:bottom-0 after:left-0 after:h-[2px] after:w-0 hover:after:w-full after:bg-[var(--accent)] after:transition-all after:duration-300"
+                  }`}
+                >
+                  <NavIcon name={item.icon} className="h-4 w-4" />
+                  <span>{item.label}</span>
+                </Link>
+              );
+            })}
           </nav>
           <div className="flex items-center">
             {isLoading ? (
               <div className="h-9 w-20 animate-pulse rounded-lg bg-[var(--border-light)]" />
             ) : user ? (
-              <button
-                type="button"
-                onClick={handleSignOut}
-                className="btn-outline !py-1.5 !px-3 !text-[0.65rem] sm:!text-xs uppercase tracking-wider whitespace-nowrap"
-              >
-                Sign out
-              </button>
+              <div className="flex items-center gap-4">
+                <Link
+                  href="/profile"
+                  className="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-[var(--accent)] to-[var(--secondary)] text-xs font-bold text-white shadow-sm ring-2 ring-white hover:opacity-90 transition-opacity uppercase"
+                  title="Your Profile"
+                >
+                  {profile ? profile.role.charAt(0) : "U"}
+                </Link>
+                <button
+                  type="button"
+                  onClick={handleSignOut}
+                  className="inline-flex items-center justify-center rounded-full bg-[var(--foreground)] text-white hover:bg-white hover:text-[var(--foreground)] border border-[var(--foreground)] transition-colors !py-1.5 !px-4 !text-[0.65rem] sm:!text-xs uppercase tracking-wider whitespace-nowrap"
+                >
+                  Sign out
+                </button>
+              </div>
             ) : (
               <button
                 type="button"
@@ -126,12 +138,12 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
         </div>
       </header>
 
-      <main className="relative z-10 mx-auto flex min-h-screen w-full max-w-6xl flex-1 flex-col px-4 pb-16 pt-24 sm:px-6 sm:pb-12 lg:px-8">
+      <main className="relative z-10 mx-auto flex min-h-screen w-full flex-1 flex-col px-4 pb-16 pt-24 sm:px-6 sm:pb-12 lg:px-12">
         {children}
       </main>
 
-      <footer className="relative z-10 border-t border-[var(--border)] bg-[var(--background)] px-6 py-12 sm:px-8">
-        <div className="mx-auto flex max-w-6xl flex-col items-center gap-8">
+      <footer className="relative z-10 border-t border-[var(--border)] bg-[var(--background)] px-6 py-12 sm:px-8 lg:px-12">
+        <div className="mx-auto flex w-full flex-col items-center gap-8">
           <BrandMark />
           <div className="flex flex-wrap justify-center gap-8 text-xs font-medium text-[var(--muted)]">
             <a href="#" className="hover:text-[var(--foreground)]">Privacy</a>

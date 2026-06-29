@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo } from "react";
+import { useRouter } from "next/navigation";
 
 import { useReports } from "@/hooks/use-reports";
 
@@ -9,6 +10,7 @@ function toTitle(value: string) {
 }
 
 export function InsightsBoard() {
+  const router = useRouter();
   const { reports, hydrated } = useReports();
 
   const metrics = useMemo(() => {
@@ -107,23 +109,47 @@ export function InsightsBoard() {
 
           <div className="mt-6 space-y-4">
             {metrics.groupedMaterials.length ? (
-              metrics.groupedMaterials.map(([label, count]) => {
+              metrics.groupedMaterials.map(([label, count], idx) => {
                 const width = Math.max(
-                  18,
+                  15,
                   (count / metrics.groupedMaterials[0][1]) * 100,
                 );
 
+                // Use slightly different colors based on rank
+                const fillColors = idx === 0 
+                  ? "from-[#fca5a5]/30 to-[#fef2f2]" // red-ish for top
+                  : idx === 1 
+                  ? "from-[#fcd34d]/30 to-[#fffbeb]" // yellow-ish for second
+                  : "from-[var(--accent-light)] to-[#f4f6f0]"; // green/earth for rest
+
+                const iconColors = idx === 0 ? "text-red-600 bg-red-50 border-red-100" 
+                  : idx === 1 ? "text-amber-600 bg-amber-50 border-amber-100" 
+                  : "text-[var(--accent)] bg-[var(--accent-light)] border-[var(--border-light)]";
+
                 return (
-                  <div key={label} className="space-y-2">
-                    <div className="flex items-center justify-between gap-4 text-sm text-[var(--muted)]">
-                      <span>{toTitle(label)}</span>
-                      <span>{count}</span>
-                    </div>
-                    <div className="h-3 rounded-full bg-[var(--border)]">
-                      <div
-                        className="h-3 rounded-full bg-gradient-to-r from-[#34d399] to-[var(--accent)] transition-all duration-500"
-                        style={{ width: `${width}%` }}
-                      />
+                  <div 
+                    key={label} 
+                    onClick={() => router.push(`/history?material=${label}`)}
+                    className="relative overflow-hidden rounded-[1rem] border border-[var(--border)] bg-white p-3 sm:p-4 shadow-sm transition-transform hover:scale-[1.01] hover:shadow-md cursor-pointer"
+                  >
+                    {/* Background fill representing intensity */}
+                    <div 
+                      className={`absolute left-0 top-0 bottom-0 z-0 bg-gradient-to-r ${fillColors}`} 
+                      style={{ width: `${width}%` }} 
+                    />
+                    
+                    {/* Content on top of fill */}
+                    <div className="relative z-10 flex items-center justify-between">
+                      <div className="flex items-center gap-3 sm:gap-4">
+                        <div className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-full border shadow-sm ${iconColors}`}>
+                          <span className="text-sm font-bold uppercase">{label.charAt(0)}</span>
+                        </div>
+                        <span className="font-semibold text-[var(--foreground)] tracking-tight">{toTitle(label)}</span>
+                      </div>
+                      <div className="flex flex-col items-end sm:flex-row sm:items-center sm:gap-2">
+                         <span className="font-display text-xl font-bold tracking-tight text-[var(--foreground)]">{count}</span>
+                         <span className="text-[0.65rem] font-bold uppercase tracking-wider text-[var(--muted)]">Reports</span>
+                      </div>
                     </div>
                   </div>
                 );

@@ -285,111 +285,7 @@ export function ReportStudio() {
     }
   };
 
-  const [playingLang, setPlayingLang] = useState<string | null>(null);
-  const audioRef = useRef<HTMLAudioElement | null>(null);
-  const [voices, setVoices] = useState<SpeechSynthesisVoice[]>([]);
 
-  useEffect(() => {
-    if (typeof window !== "undefined" && window.speechSynthesis) {
-      const updateVoices = () => {
-        setVoices(window.speechSynthesis.getVoices());
-      };
-      updateVoices();
-      window.speechSynthesis.onvoiceschanged = updateVoices;
-    }
-  }, []);
-
-  const textMap = useMemo(() => ({
-    en: "Welcome to EarthMender. Tap the green 'Open Camera' button to take a photo of the waste, or tap 'Choose Photo' to upload a picture. Once the photo is added, you can fill in details or just tap submit to send it.",
-    yo: "Ẹ káàbọ̀ sí EarthMender. Tẹ bọ́tìnì aláwọ̀ ewé 'Open Camera' láti ya àwòrán ìdọ̀tí náà, tàbí 'Choose Photo' láti yan àwòrán tí o ti yà sílẹ̀. Lẹ́yìn náà, o le tẹ submit láti fi ránsẹ́.",
-    pidgin: "Welcome to EarthMender. Tap the green 'Open Camera' button to snap picture of the waste, or tap 'Choose Photo' to choose picture from your phone. After you snap or choose the picture, just tap submit to send am.",
-  }), []);
-
-  const playVoiceGuide = (lang: "en" | "yo" | "pidgin") => {
-    if (audioRef.current) {
-      audioRef.current.pause();
-      audioRef.current = null;
-    }
-
-    if (playingLang === lang) {
-      setPlayingLang(null);
-      return;
-    }
-
-    if (typeof window !== "undefined" && window.speechSynthesis) {
-      window.speechSynthesis.cancel();
-    }
-
-    setPlayingLang(lang);
-
-    const audioMap = {
-      en: "/audio/guide-en.mp3",
-      yo: "/audio/guide-yo.mp3",
-      pidgin: "/audio/guide-pidgin.mp3",
-    };
-
-    const audio = new Audio(audioMap[lang]);
-    audioRef.current = audio;
-
-    audio.onended = () => {
-      setPlayingLang(null);
-    };
-
-    audio.play().catch((err) => {
-      console.warn("Audio file play failed, falling back to speech synthesis:", err);
-      if (typeof window !== "undefined" && window.speechSynthesis) {
-        const utterance = new SpeechSynthesisUtterance(textMap[lang]);
-        
-        let selectedVoice: SpeechSynthesisVoice | undefined = undefined;
-        const availableVoices = window.speechSynthesis.getVoices();
-        
-        if (lang === "yo") {
-          selectedVoice = availableVoices.find(v => v.lang.toLowerCase().startsWith("yo"));
-          if (!selectedVoice) {
-            selectedVoice = availableVoices.find(v => 
-              v.lang.toLowerCase().includes("ng") || 
-              v.name.toLowerCase().includes("nigeria")
-            );
-          }
-        } else if (lang === "pidgin") {
-          selectedVoice = availableVoices.find(v => 
-            v.lang.toLowerCase().includes("ng") || 
-            v.name.toLowerCase().includes("nigeria")
-          );
-        }
-
-        if (selectedVoice) {
-          utterance.voice = selectedVoice;
-        } else {
-          if (lang === "yo") {
-            utterance.lang = "yo-NG";
-          } else if (lang === "pidgin") {
-            utterance.lang = "en-NG";
-          } else {
-            utterance.lang = "en-US";
-          }
-        }
-
-        utterance.onend = () => {
-          setPlayingLang(null);
-        };
-        window.speechSynthesis.speak(utterance);
-      } else {
-        setPlayingLang(null);
-      }
-    });
-  };
-
-  useEffect(() => {
-    return () => {
-      if (audioRef.current) {
-        audioRef.current.pause();
-      }
-      if (typeof window !== "undefined" && window.speechSynthesis) {
-        window.speechSynthesis.cancel();
-      }
-    };
-  }, []);
 
   const cameraInputRef = useRef<HTMLInputElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -419,7 +315,7 @@ export function ReportStudio() {
     setGpsAccuracy(null);
 
     navigator.geolocation.getCurrentPosition(
-      (position) => {
+      async (position) => {
         const nextLatitude = position.coords.latitude.toFixed(6);
         const nextLongitude = position.coords.longitude.toFixed(6);
         const accuracy = Math.round(position.coords.accuracy);
@@ -428,13 +324,29 @@ export function ReportStudio() {
         setLongitude(nextLongitude);
         setGpsAccuracy(accuracy);
 
+        let addressLabel = `GPS Geolocated Spot (within ${accuracy}m)`;
+        
+        try {
+          const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${nextLatitude}&lon=${nextLongitude}`);
+          if (response.ok) {
+            const data = await response.json();
+            if (data && data.display_name) {
+               // Limit to first 3 parts of the address for readability
+               const parts = data.display_name.split(", ");
+               addressLabel = parts.slice(0, 3).join(", ");
+            }
+          }
+        } catch (err) {
+          console.error("Reverse geocoding failed", err);
+        }
+
         setLocationLabel((current) => {
           if (
             !current ||
             current === "Current device location" ||
             current.startsWith("GPS Geolocated Spot")
           ) {
-            return `GPS Geolocated Spot (within ${accuracy}m)`;
+            return addressLabel;
           }
           return current;
         });
@@ -818,12 +730,14 @@ export function ReportStudio() {
                 setShowFormManual(true);
                 fetchLocation();
               }}
-              className="mt-6 text-sm font-medium text-[var(--muted)] hover:text-[var(--foreground)] transition-colors underline underline-offset-4 cursor-pointer"
+              className="btn-outline mt-8 w-full sm:w-auto mx-auto !py-3 !px-6 text-sm flex items-center justify-center gap-2 cursor-pointer transition-all hover:bg-[var(--accent-surface)] hover:text-[var(--foreground)]"
             >
-              Or report manually without photo
+              <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+              </svg>
+              Report manually without photo
             </button>
           </div>
-        </div>
       ) : (
         <div className="grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
           <form

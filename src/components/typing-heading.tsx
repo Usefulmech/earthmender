@@ -41,14 +41,14 @@ export function TypingHeading() {
   }, [isTypingLine1]);
 
   return (
-    <h1 className="font-display text-[4rem] font-bold leading-[1.05] tracking-tighter sm:text-[6.5rem]">
+    <h1 className="font-display text-[4rem] font-extrabold leading-[1.05] tracking-tight sm:text-[6.5rem] drop-shadow-sm">
       {displayedLine1}
       {isTypingLine1 && <span className="animate-pulse border-r-[6px] border-[var(--foreground)] ml-2 h-[4rem] sm:h-[6rem] inline-block align-bottom" />}
       <br />
-      <span className="text-[var(--muted)]">
+      <span className="text-transparent bg-clip-text bg-gradient-to-br from-[var(--accent)] to-[var(--secondary)]">
         {displayedLine2}
-        {!isTypingLine1 && <span className="animate-pulse border-r-[6px] border-[var(--muted)] ml-2 h-[4rem] sm:h-[6rem] inline-block align-bottom" />}
       </span>
+      {!isTypingLine1 && <span className="animate-pulse border-r-[6px] border-[var(--accent)] ml-2 h-[4rem] sm:h-[6rem] inline-block align-bottom" />}
     </h1>
   );
 }

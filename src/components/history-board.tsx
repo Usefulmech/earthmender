@@ -1,5 +1,7 @@
 "use client";
 
+import { useEffect } from "react";
+
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 
@@ -40,6 +42,29 @@ export function HistoryBoard() {
   const { user } = useAuth();
   const { reports, hydrated } = useReports(role === "mender" ? user?.$id : undefined);
 
+  const materialFilter = searchParams.get("material");
+  const filteredReports = reports.filter((report) => {
+    if (!materialFilter) return true;
+    if (materialFilter === "manual_review") return report.detections.length === 0;
+    return report.detections.some((d) => d.label === materialFilter);
+  });
+
+  useEffect(() => {
+    if (hydrated && typeof window !== "undefined" && window.location.hash) {
+      const id = window.location.hash.substring(1);
+      const el = document.getElementById(id);
+      if (el) {
+        setTimeout(() => {
+          el.scrollIntoView({ behavior: "smooth", block: "center" });
+          el.classList.add("ring-2", "ring-[var(--accent)]", "ring-offset-4", "transition-shadow");
+          setTimeout(() => {
+            el.classList.remove("ring-2", "ring-[var(--accent)]", "ring-offset-4");
+          }, 2000);
+        }, 100);
+      }
+    }
+  }, [hydrated]);
+
   if (!hydrated) {
     return (
       <div className="surface-panel p-6 text-sm text-[var(--muted)]">
@@ -58,6 +83,17 @@ export function HistoryBoard() {
         <h1 className="mt-4 font-display text-[2.5rem] font-bold leading-[0.98] tracking-[-0.05em] text-[var(--foreground)] sm:text-[3.4rem]">
           {role === "operator" ? "Run the queue." : "Your reports."}
         </h1>
+        {materialFilter && (
+          <div className="mt-4 flex items-center gap-2">
+            <span className="text-sm text-[var(--muted)]">Filtered by material:</span>
+            <span className="rounded-full bg-[var(--accent-light)] px-3 py-1 text-xs font-semibold text-[var(--accent)] capitalize">
+              {materialFilter.replace(/_/g, " ")}
+            </span>
+            <Link href="/history" className="text-xs text-[var(--muted)] underline hover:text-[var(--foreground)] ml-2">
+              Clear filter
+            </Link>
+          </div>
+        )}
         <p className="mt-4 max-w-3xl text-sm leading-7 text-[var(--muted)] sm:text-base">
           {role === "operator"
             ? "Review, resolve, repeat."
@@ -72,27 +108,28 @@ export function HistoryBoard() {
         </div>
       ) : null}
 
-      {reports.length === 0 ? (
+      {filteredReports.length === 0 ? (
         <div className="surface-panel flex flex-col gap-4 p-6">
           <h2 className="font-display text-2xl tracking-[-0.04em] text-[var(--foreground)]">
-            No reports yet
+            {materialFilter ? "No reports found for this material" : "No reports yet"}
           </h2>
           <p className="max-w-2xl text-sm leading-7 text-[var(--muted)]">
-            Start with your first field capture. Once reports exist, this page
-            becomes your running record of what was seen, how urgent it was, and
-            whether action has already happened.
+            {materialFilter 
+              ? "There are no reports containing this specific material type. Try clearing the filter."
+              : "Start with your first field capture. Once reports exist, this page becomes your running record of what was seen, how urgent it was, and whether action has already happened."}
           </p>
           <Link
-            href={role === "operator" ? "/operator" : "/report"}
+            href={materialFilter ? "/history" : (role === "operator" ? "/operator" : "/report")}
             className="btn-primary w-fit"
           >
-            {role === "operator" ? "Go to operator home" : "Open report studio"}
+            {materialFilter ? "Clear Filter" : (role === "operator" ? "Go to operator home" : "Open report studio")}
           </Link>
         </div>
       ) : (
-        reports.map((report) => (
+        filteredReports.map((report) => (
           <article
             key={report.id}
+            id={report.id}
             className="surface-panel grid gap-5 p-5 sm:p-6 lg:grid-cols-[1.1fr_0.9fr]"
           >
             <div className="flex flex-col gap-4">

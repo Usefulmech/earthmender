@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 import { useReports } from "@/hooks/use-reports";
 import { storage } from "@/lib/appwrite";
@@ -16,6 +17,7 @@ const getImageUrl = (imageName: string) => {
 };
 
 export function OperatorHome() {
+  const router = useRouter();
   const { reports, hydrated } = useReports();
 
   const openReports = reports.filter((report) => report.status !== "resolved");
@@ -93,7 +95,8 @@ export function OperatorHome() {
             openReports.slice(0, 4).map((report) => (
               <div
                 key={report.id}
-                className="rounded-[1.5rem] border border-[var(--border)] bg-[var(--accent-surface)] p-5 transition-all duration-200 hover:shadow-md flex flex-col md:flex-row gap-5 items-start md:items-center justify-between"
+                onClick={() => router.push(`/history#${report.id}`)}
+                className="rounded-[1.5rem] border border-[var(--border)] bg-[var(--accent-surface)] p-5 transition-all duration-200 hover:shadow-md hover:scale-[1.01] cursor-pointer flex flex-col md:flex-row gap-5 items-start md:items-center justify-between"
               >
                 <div className="flex-1 flex flex-col gap-2">
                   <div className="flex flex-wrap items-center gap-2">
@@ -113,6 +116,7 @@ export function OperatorHome() {
                   {report.latitude && report.longitude && (
                     <Link
                       href="/map"
+                      onClick={(e) => e.stopPropagation()}
                       className="mt-1 inline-flex items-center gap-1.5 text-xs font-semibold text-[var(--accent)] hover:underline"
                     >
                       <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">

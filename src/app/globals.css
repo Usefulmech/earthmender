@@ -1,17 +1,20 @@
 @import "tailwindcss";
 
 :root {
-  --background: #fcfbf8;
-  --panel: #ffffff;
-  --foreground: #000000;
-  --muted: #666666;
-  --muted-light: #999999;
-  --border: #eaeaea;
-  --border-light: #f5f5f5;
-  --accent: #10B981;
-  --accent-hover: #059669;
-  --accent-light: #ecfdf5;
-  --accent-surface: #fafafa;
+  --background: #f4f6f0;
+  --panel: rgba(255, 255, 255, 0.75);
+  --foreground: #132a1e;
+  --muted: #5c6b61;
+  --muted-light: #8b9c91;
+  --border: #e0e6e2;
+  --border-light: #edf2ee;
+  --accent: #059669;
+  --accent-hover: #047857;
+  --accent-light: #d1fae5;
+  --accent-surface: rgba(255, 255, 255, 0.45);
+  --secondary: #0ea5e9;
+  --secondary-hover: #0284c7;
+  --secondary-light: #e0f2fe;
 }
 
 @theme inline {
@@ -57,9 +60,11 @@ a {
 
 .surface-panel {
   background: var(--panel);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   border: 1px solid var(--border);
   border-radius: 16px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.02);
+  box-shadow: 0 8px 32px rgba(19, 42, 30, 0.05);
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
@@ -153,23 +158,25 @@ a {
   align-items: center;
   justify-content: center;
   border-radius: 999px;
-  background: var(--foreground);
+  background: linear-gradient(135deg, var(--foreground) 0%, #1a3a2a 100%);
   padding: 0.65rem 1.2rem;
   font-size: 0.875rem;
   font-weight: 500;
   color: #fff;
-  transition: all 0.15s ease;
+  transition: all 0.2s ease;
   cursor: pointer;
-  border: 1px solid var(--foreground);
+  border: 1px solid transparent;
+  box-shadow: 0 4px 14px rgba(19, 42, 30, 0.15);
 }
 
 .btn-primary:hover {
-  background: #222222;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.12);
+  transform: translateY(-1px);
+  box-shadow: 0 6px 20px rgba(19, 42, 30, 0.25);
+  background: linear-gradient(135deg, #1a3a2a 0%, var(--foreground) 100%);
 }
 
 .btn-primary:active {
-  transform: scale(0.97);
+  transform: translateY(1px);
 }
 
 .btn-primary:disabled {

@@ -61,5 +61,8 @@ export type UserProfile = {
   role: UserRole;
   companyName?: string;
   coverageLGA?: string;
+  name?: string;
+  phoneNumber?: string;
+  address?: string;
   trustScore: number;
 };
