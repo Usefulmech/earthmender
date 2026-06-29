@@ -5,6 +5,7 @@ import { useSearchParams } from "next/navigation";
 
 import { useReports } from "@/hooks/use-reports";
 import { useUserRole } from "@/hooks/use-user-role";
+import { useAuth } from "@/components/auth-provider";
 import { updateReportStatus } from "@/lib/cloud-reports";
 import type { ReportStatus } from "@/lib/types";
 import { storage } from "@/lib/appwrite";
@@ -36,7 +37,8 @@ function formatDate(value: string) {
 export function HistoryBoard() {
   const searchParams = useSearchParams();
   const { role } = useUserRole();
-  const { reports, hydrated } = useReports();
+  const { user } = useAuth();
+  const { reports, hydrated } = useReports(role === "mender" ? user?.$id : undefined);
 
   if (!hydrated) {
     return (

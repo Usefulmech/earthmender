@@ -13,8 +13,8 @@ function formatDate(value: string) {
 }
 
 export function MenderHome() {
-  const { reports, hydrated } = useReports();
-  const { profile, refreshProfile } = useAuth();
+  const { user, profile, refreshProfile } = useAuth();
+  const { reports, hydrated } = useReports(user?.$id);
 
   useEffect(() => {
     refreshProfile().catch((err) => console.error("Failed to refresh profile:", err));

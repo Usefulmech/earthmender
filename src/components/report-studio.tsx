@@ -13,6 +13,52 @@ import type {
   WasteSeverity,
 } from "@/lib/types";
 
+async function compressImage(file: File): Promise<File> {
+  return new Promise((resolve) => {
+    const img = new Image();
+    const url = URL.createObjectURL(file);
+    img.onload = () => {
+      URL.revokeObjectURL(url);
+      const canvas = document.createElement("canvas");
+      let { width, height } = img;
+      
+      const MAX_WIDTH = 1200;
+      const MAX_HEIGHT = 1200;
+      
+      if (width > height) {
+        if (width > MAX_WIDTH) {
+          height = Math.round((height * MAX_WIDTH) / width);
+          width = MAX_WIDTH;
+        }
+      } else {
+        if (height > MAX_HEIGHT) {
+          width = Math.round((width * MAX_HEIGHT) / height);
+          height = MAX_HEIGHT;
+        }
+      }
+      
+      canvas.width = width;
+      canvas.height = height;
+      const ctx = canvas.getContext("2d");
+      if (!ctx) {
+        resolve(file);
+        return;
+      }
+      
+      ctx.drawImage(img, 0, 0, width, height);
+      canvas.toBlob((blob) => {
+        if (blob) {
+          resolve(new File([blob], file.name, { type: "image/jpeg" }));
+        } else {
+          resolve(file);
+        }
+      }, "image/jpeg", 0.7);
+    };
+    img.onerror = () => resolve(file);
+    img.src = url;
+  });
+}
+
 type ImpactSignal = {
   id: string;
   label: string;
@@ -221,11 +267,12 @@ export function ReportStudio() {
     const ctx = canvas.getContext("2d");
     if (ctx) {
       ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-      canvas.toBlob((blob) => {
+      canvas.toBlob(async (blob) => {
         if (blob) {
-          const capturedFile = new File([blob], `camera-${Date.now()}.jpg`, {
+          let capturedFile = new File([blob], `camera-${Date.now()}.jpg`, {
             type: "image/jpeg",
           });
+          capturedFile = await compressImage(capturedFile);
           setFile(capturedFile);
           
           if (cameraStream) {
@@ -628,6 +675,14 @@ export function ReportStudio() {
     );
   }
 
+  const handleFileSelect = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const selectedFile = event.target.files?.[0];
+    if (selectedFile) {
+      const compressed = await compressImage(selectedFile);
+      setFile(compressed);
+    }
+  };
+
   return (
     <div className="w-full">
       {/* Unified inputs mounted exactly once, visually hidden but natively layout-rendered */}
@@ -638,7 +693,7 @@ export function ReportStudio() {
         accept="image/*"
         capture="environment"
         className="absolute opacity-0 pointer-events-none w-px h-px overflow-hidden"
-        onChange={(event) => setFile(event.target.files?.[0] || null)}
+        onChange={handleFileSelect}
       />
       <input
         ref={fileInputRef}
@@ -646,7 +701,7 @@ export function ReportStudio() {
         type="file"
         accept="image/*"
         className="absolute opacity-0 pointer-events-none w-px h-px overflow-hidden"
-        onChange={(event) => setFile(event.target.files?.[0] || null)}
+        onChange={handleFileSelect}
       />
 
       {!file && !showFormManual ? (

@@ -28,6 +28,7 @@
 html {
   scroll-behavior: smooth;
   background-color: var(--background);
+  overflow-x: hidden;
 }
 
 body {
@@ -40,6 +41,7 @@ body {
   font-variant-ligatures: contextual common-ligatures;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
 }
 
 a {

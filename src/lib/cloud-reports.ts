@@ -43,17 +43,22 @@ function mapDocumentToReport(doc: Models.Document): ReportRecord {
   };
 }
 
-export async function fetchReports(): Promise<ReportRecord[]> {
+export async function fetchReports(menderId?: string): Promise<ReportRecord[]> {
   try {
     if (!databaseId || !collectionId) {
       console.warn("Database or Collection ID not set.");
       return [];
     }
 
+    const queries = [Query.orderDesc("$createdAt")];
+    if (menderId) {
+      queries.push(Query.equal("menderId", menderId));
+    }
+
     const response = await databases.listDocuments(
       databaseId,
       collectionId,
-      [Query.orderDesc("$createdAt")]
+      queries
     );
 
     return response.documents.map(mapDocumentToReport);

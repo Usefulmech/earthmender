@@ -5,15 +5,15 @@ import { fetchReports } from "@/lib/cloud-reports";
 import type { ReportRecord } from "@/lib/types";
 import { client, databaseId, collectionId } from "@/lib/appwrite";
 
-export function useReports() {
+export function useReports(menderId?: string) {
   const [reports, setReports] = useState<ReportRecord[]>([]);
   const [hydrated, setHydrated] = useState(false);
 
   const loadAll = useCallback(async () => {
-    const data = await fetchReports();
+    const data = await fetchReports(menderId);
     setReports(data);
     setHydrated(true);
-  }, []);
+  }, [menderId]);
 
   useEffect(() => {
     loadAll();

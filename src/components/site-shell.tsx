@@ -145,7 +145,7 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
       </footer>
 
       {/* Sleek Mobile Nav */}
-      <nav className="fixed bottom-6 left-1/2 z-50 flex w-[calc(100%-2rem)] max-w-md -translate-x-1/2 items-center justify-between rounded-2xl border border-[var(--border)] bg-white/90 px-3 py-2 shadow-lg backdrop-blur-xl md:hidden">
+      <nav className="fixed bottom-0 left-0 z-50 flex w-full items-center justify-around border-t border-[var(--border)] bg-white/95 px-4 py-2 pb-[calc(0.5rem+env(safe-area-inset-bottom,0px))] shadow-[0_-4px_20px_rgba(0,0,0,0.05)] backdrop-blur-xl md:hidden">
         {navItems.map((item) => {
           const active = isActive(pathname, item.href);
 
