@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Inter, DM_Sans } from "next/font/google";
+import { Plus_Jakarta_Sans } from "next/font/google";
 import "leaflet/dist/leaflet.css";
 
 import { AuthProvider } from "@/components/auth-provider";
@@ -7,13 +7,13 @@ import { SiteShell } from "@/components/site-shell";
 
 import "./globals.css";
 
-const inter = Inter({
+const jakarta = Plus_Jakarta_Sans({
   subsets: ["latin"],
   display: "swap",
   variable: "--font-earth-body",
 });
 
-const dmSans = DM_Sans({
+const jakartaDisplay = Plus_Jakarta_Sans({
   subsets: ["latin"],
   display: "swap",
   variable: "--font-earth-display",
@@ -33,7 +33,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${inter.variable} ${dmSans.variable} h-full antialiased`}
+      className={`${jakarta.variable} ${jakartaDisplay.variable} h-full antialiased`}
     >
       <body className="min-h-full">
         <AuthProvider>

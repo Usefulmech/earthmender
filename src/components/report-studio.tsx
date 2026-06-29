@@ -761,60 +761,7 @@ export function ReportStudio() {
               Snap a new photo or select one from your library to start the report.
             </p>
 
-            {/* Multilingual Voice Guide Widget */}
-            <div className="mt-6 mb-2 p-4 bg-white border border-[var(--border)] rounded-[1.2rem] w-full max-w-md shadow-sm flex flex-col items-center gap-3">
-              <span className="text-xs font-semibold text-[var(--muted)] flex items-center gap-1.5 uppercase tracking-wider">
-                <svg className="h-4.5 w-4.5 text-[var(--accent)]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
-                </svg>
-                Voice Guide / Ìtọ́sọ́nà Ohùn
-              </span>
-              <div className="flex gap-2 w-full">
-                <button
-                  type="button"
-                  onClick={() => playVoiceGuide("en")}
-                  className={`flex-1 text-xs py-2.5 px-3 rounded-full border transition-all font-semibold flex items-center justify-center gap-1 cursor-pointer ${
-                    playingLang === "en"
-                      ? "bg-[var(--foreground)] text-white border-[var(--foreground)] animate-pulse"
-                      : "bg-[var(--accent-surface)] text-[var(--foreground)] border-[var(--border)] hover:border-[var(--accent)]/50"
-                  }`}
-                >
-                  {playingLang === "en" ? "Stop ⏹️" : "English 🇬🇧"}
-                </button>
-                <button
-                  type="button"
-                  onClick={() => playVoiceGuide("yo")}
-                  className={`flex-1 text-xs py-2.5 px-3 rounded-full border transition-all font-semibold flex items-center justify-center gap-1 cursor-pointer ${
-                    playingLang === "yo"
-                      ? "bg-[var(--foreground)] text-white border-[var(--foreground)] animate-pulse"
-                      : "bg-[var(--accent-surface)] text-[var(--foreground)] border-[var(--border)] hover:border-[var(--accent)]/50"
-                  }`}
-                >
-                  {playingLang === "yo" ? "Stop ⏹️" : "Yorùbá 🇳🇬"}
-                </button>
-                <button
-                  type="button"
-                  onClick={() => playVoiceGuide("pidgin")}
-                  className={`flex-1 text-xs py-2.5 px-3 rounded-full border transition-all font-semibold flex items-center justify-center gap-1 cursor-pointer ${
-                    playingLang === "pidgin"
-                      ? "bg-[var(--foreground)] text-white border-[var(--foreground)] animate-pulse"
-                      : "bg-[var(--accent-surface)] text-[var(--foreground)] border-[var(--border)] hover:border-[var(--accent)]/50"
-                  }`}
-                >
-                  {playingLang === "pidgin" ? "Stop ⏹️" : "Pidgin 🇳🇬"}
-                </button>
-              </div>
 
-              {playingLang && (
-                <div className="w-full text-left p-3.5 bg-[var(--accent-surface)] border border-[var(--border)] rounded-[1rem] text-sm text-[var(--foreground)] animate-fade-in mt-2">
-                  <p className="font-semibold text-xs text-[var(--accent)] mb-1 uppercase tracking-wider">
-                    {playingLang === "en" ? "Instructions" : playingLang === "yo" ? "Àwọn Ìtọ́sọ́nà" : "How to do am"}
-                  </p>
-                  <p className="leading-relaxed text-xs sm:text-sm">
-                    {textMap[playingLang as "en" | "yo" | "pidgin"]}
-                  </p>
-                </div>
-              )}
             </div>
 
             <div className="mt-6 flex flex-col gap-3 w-full sm:flex-row sm:justify-center">

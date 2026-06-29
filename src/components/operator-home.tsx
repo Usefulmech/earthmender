@@ -44,7 +44,7 @@ export function OperatorHome() {
 
           <div className="mt-7 flex flex-col gap-3 sm:flex-row">
             <Link href="/history" className="btn-primary">
-              Queue
+              Open Queue
             </Link>
             <Link href="/insights" className="btn-outline">
               Insights
@@ -52,13 +52,13 @@ export function OperatorHome() {
           </div>
         </div>
 
-        <div className="grid gap-4 sm:grid-cols-3 xl:grid-cols-1">
+        <div className="grid grid-cols-2 gap-4">
           {[
-            { label: "Open", value: openReports.length },
-            { label: "Resolved", value: resolvedReports.length },
-            { label: "Hot zones", value: hotspotCount },
+            { label: "Open", value: openReports.length, span: false },
+            { label: "Resolved", value: resolvedReports.length, span: false },
+            { label: "Hot zones", value: hotspotCount, span: true },
           ].map((item, index) => (
-            <div key={item.label} className={`surface-panel p-5 animate-fade-in-up animate-delay-${(index + 1) * 100}`}>
+            <div key={item.label} className={`surface-panel p-5 animate-fade-in-up animate-delay-${(index + 1) * 100} ${item.span ? 'col-span-2' : ''}`}>
               <p className="text-xs uppercase tracking-[0.18em] text-[var(--muted-light)]">
                 {item.label}
               </p>
@@ -70,38 +70,7 @@ export function OperatorHome() {
         </div>
       </section>
 
-      <section className="grid gap-4 md:grid-cols-2">
-        <div className="surface-panel p-5">
-          <span className="eyebrow">Quick</span>
-          <h2 className="mt-4 font-display text-[1.8rem] tracking-[-0.05em] text-[var(--foreground)]">
-            Actions
-          </h2>
-          <div className="mt-5 grid gap-3 sm:grid-cols-2">
-            <Link
-              href="/history"
-              className="btn-primary rounded-[1.4rem] px-4 py-4"
-            >
-              Open queue
-            </Link>
-            <Link
-              href="/map"
-              className="btn-outline rounded-[1.4rem] px-4 py-4"
-            >
-              Open map
-            </Link>
-          </div>
-        </div>
 
-        <div className="surface-panel p-5">
-          <span className="eyebrow">Signal</span>
-          <h2 className="mt-4 font-display text-[1.8rem] tracking-[-0.05em] text-[var(--foreground)]">
-            What matters
-          </h2>
-          <div className="mt-5 rounded-[1.4rem] bg-[var(--accent-surface)] px-4 py-4 text-sm leading-7 text-[var(--muted)]">
-            Watch open reports, repeated locations, and red zones first.
-          </div>
-        </div>
-      </section>
 
       <section className="surface-panel p-6 sm:p-8">
         <div className="flex items-center justify-between gap-4">
@@ -142,18 +111,16 @@ export function OperatorHome() {
                     {report.locationLabel}
                   </p>
                   {report.latitude && report.longitude && (
-                    <a
-                      href={`https://www.google.com/maps/dir/?api=1&destination=${report.latitude},${report.longitude}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
+                    <Link
+                      href="/map"
                       className="mt-1 inline-flex items-center gap-1.5 text-xs font-semibold text-[var(--accent)] hover:underline"
                     >
                       <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                       </svg>
-                      Get Directions
-                    </a>
+                      View on Map
+                    </Link>
                   )}
                 </div>
                 {getImageUrl(report.imageName) && (

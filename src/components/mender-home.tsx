@@ -56,7 +56,7 @@ export function MenderHome() {
           </div>
         </div>
 
-        <div className="grid gap-4 sm:grid-cols-4 lg:grid-cols-1">
+        <div className="grid grid-cols-2 gap-4">
           {[
             { label: "Trust Score", value: profile?.trustScore ?? 50 },
             { label: "Sent", value: reports.length },

@@ -131,19 +131,17 @@ export function HistoryBoard() {
                     </p>
                     <p className="mt-2">{report.locationLabel}</p>
                   </div>
-                  {role === "operator" && report.latitude && report.longitude && (
-                    <a
-                      href={`https://www.google.com/maps/dir/?api=1&destination=${report.latitude},${report.longitude}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="mt-3 inline-flex items-center gap-1.5 text-xs font-semibold text-[var(--accent)] hover:underline"
+                  {report.latitude && report.longitude && (
+                    <Link
+                      href="/map"
+                      className="mt-2 inline-flex items-center gap-1.5 text-xs font-semibold text-[var(--accent)] hover:underline"
                     >
                       <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
                       </svg>
-                      Get Directions
-                    </a>
+                      View on Map
+                    </Link>
                   )}
                 </div>
                 <div className="rounded-[1.3rem] bg-[var(--accent-surface)] px-4 py-3">
@@ -175,7 +173,7 @@ export function HistoryBoard() {
                       )
                     }
                     className="rounded-full border border-[var(--border)] bg-white px-3 py-2 text-sm text-[var(--foreground)] outline-none transition-all duration-200 focus:border-[var(--accent)] focus:ring-4 focus:ring-[var(--accent)]/15 cursor-pointer"
-                    >
+                  >
                     {statusOptions.map((option) => (
                       <option key={option} value={option}>
                         {option}
