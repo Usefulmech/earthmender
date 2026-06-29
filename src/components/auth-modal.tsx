@@ -62,8 +62,6 @@ export function AuthModal({ isOpen, onClose }: AuthModalProps) {
       if (profile && profile.$id) {
         await authService.updateProfile(profile.$id, {
           role,
-          companyName: role === "operator" ? companyName : undefined,
-          coverageLGA: role === "operator" ? coverageLGA : undefined,
         });
       } else {
         const newProfile: Omit<UserProfile, "$id"> = {
