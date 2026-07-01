@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, useRef } from "react";
 import {
   MapContainer,
   Marker,
@@ -21,6 +21,7 @@ type ReportMapCanvasProps = {
   selectedGroupId: string | null;
   onSelectGroup: (groupId: string) => void;
   showHubs?: boolean;
+  routeToDestination?: [number, number] | null;
 };
 
 // --- Custom Hub Marker ---
@@ -113,6 +114,7 @@ export function ReportMapCanvas({
   selectedGroupId,
   onSelectGroup,
   showHubs = false,
+  routeToDestination,
 }: ReportMapCanvasProps) {
   const selected = useMemo(
     () => groups.find((g) => g.id === selectedGroupId) || groups[0] || null,
@@ -123,8 +125,19 @@ export function ReportMapCanvas({
   const [routingState, setRoutingState] = useState<"idle" | "loading" | "error">("idle");
   const [routingError, setRoutingError] = useState<string | null>(null);
 
+  const [userLocation, setUserLocation] = useState<[number, number] | null>(null);
+  const watchIdRef = useRef<number | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (watchIdRef.current !== null && typeof navigator !== "undefined" && navigator.geolocation) {
+        navigator.geolocation.clearWatch(watchIdRef.current);
+      }
+    };
+  }, []);
+
   const handleGetDirections = (destLat: number, destLon: number) => {
-    if (!navigator.geolocation) {
+    if (typeof navigator === "undefined" || !navigator.geolocation) {
       setRoutingState("error");
       setRoutingError("Geolocation is not supported by your browser.");
       return;
@@ -132,42 +145,69 @@ export function ReportMapCanvas({
     
     setRoutingState("loading");
     setRoutingError(null);
-    navigator.geolocation.getCurrentPosition(
+    let routeFetched = false;
+
+    if (watchIdRef.current !== null) {
+      navigator.geolocation.clearWatch(watchIdRef.current);
+    }
+
+    const id = navigator.geolocation.watchPosition(
       async (position) => {
         const userLat = position.coords.latitude;
         const userLon = position.coords.longitude;
+        setUserLocation([userLat, userLon]);
         
-        try {
-          const res = await fetch(
-            `https://router.project-osrm.org/route/v1/driving/${userLon},${userLat};${destLon},${destLat}?overview=full&geometries=geojson`
-          );
-          const data = await res.json();
-          if (data.routes && data.routes.length > 0) {
-            const coordinates = data.routes[0].geometry.coordinates;
-            // GeoJSON gives [lng, lat], Leaflet Polyline needs [lat, lng]
-            const latLngs = coordinates.map((coord: [number, number]) => [coord[1], coord[0]]);
-            setRoutePath(latLngs as [number, number][]);
-            setRoutingState("idle");
-          } else {
+        if (!routeFetched) {
+          routeFetched = true;
+          try {
+            const res = await fetch(
+              `https://router.project-osrm.org/route/v1/driving/${userLon},${userLat};${destLon},${destLat}?overview=full&geometries=geojson`
+            );
+            const data = await res.json();
+            if (data.routes && data.routes.length > 0) {
+              const coordinates = data.routes[0].geometry.coordinates;
+              const latLngs = coordinates.map((coord: [number, number]) => [coord[1], coord[0]]);
+              setRoutePath(latLngs as [number, number][]);
+              setRoutingState("idle");
+            } else {
+              setRoutingState("error");
+              setRoutingError("Could not find a route.");
+            }
+          } catch (error) {
+            console.error("Routing error:", error);
             setRoutingState("error");
-            setRoutingError("Could not find a route.");
+            setRoutingError("Failed to fetch route.");
           }
-        } catch (error) {
-          console.error("Routing error:", error);
-          setRoutingState("error");
-          setRoutingError("Failed to fetch route.");
         }
       },
       (error) => {
         console.error("Geolocation error:", error);
-        setRoutingState("error");
-        setRoutingError("Could not get your location.");
+        if (!routeFetched) {
+          setRoutingState("error");
+          setRoutingError("Could not get your location.");
+        }
+      },
+      {
+        enableHighAccuracy: true,
+        maximumAge: 5000,
+        timeout: 10000,
       }
     );
+    
+    watchIdRef.current = id;
   };
+
+  useEffect(() => {
+    if (routeToDestination) {
+      handleGetDirections(routeToDestination[0], routeToDestination[1]);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [routeToDestination]);
 
   const initialCenter: LatLngExpression = selected
     ? [selected.latitude, selected.longitude]
+    : routeToDestination
+    ? [routeToDestination[0], routeToDestination[1]]
     : [6.5244, 3.3792];
 
   return (
@@ -187,6 +227,20 @@ export function ReportMapCanvas({
       
       {routePath && (
         <Polyline positions={routePath} color="#15803d" weight={5} opacity={0.8} />
+      )}
+
+      {userLocation && (
+        <Marker
+          position={userLocation}
+          icon={divIcon({
+            className: "custom-user-marker",
+            html: `<div style="width:16px;height:16px;border-radius:50%;background:#3b82f6;border:3px solid white;box-shadow:0 0 10px rgba(59,130,246,0.6);"></div>`,
+            iconSize: [16, 16],
+            iconAnchor: [8, 8],
+          })}
+        >
+          <Popup>You are here</Popup>
+        </Marker>
       )}
 
       {groups.map((group) => (

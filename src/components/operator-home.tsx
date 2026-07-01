@@ -82,12 +82,6 @@ export function OperatorHome() {
               Needs action
             </h2>
           </div>
-          <Link
-            href="/map"
-            className="hidden sm:inline-flex btn-outline rounded-full px-4 py-2 text-sm"
-          >
-            Map
-          </Link>
         </div>
 
         <div className="mt-6 grid gap-4">

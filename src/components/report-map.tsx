@@ -2,6 +2,7 @@
 
 import dynamic from "next/dynamic";
 import { useMemo, useState } from "react";
+import { useSearchParams } from "next/navigation";
 
 import { useReports } from "@/hooks/use-reports";
 import { useUserRole } from "@/hooks/use-user-role";
@@ -105,11 +106,27 @@ function buildReportGroups(reports: ReportRecord[]): ReportGroup[] {
 
 export function ReportMap() {
   const { role } = useUserRole();
+  const searchParams = useSearchParams();
   const { reports, hydrated } = useReports();
   const [statusFilter, setStatusFilter] = useState<"all" | "open" | "resolved">("all");
   const [selectedGroupId, setSelectedGroupId] = useState<string | null>(null);
   const [selectedReportId, setSelectedReportId] = useState<string | null>(null);
   const [showHubs, setShowHubs] = useState(false);
+
+  const routeToDestination: [number, number] | null = useMemo(() => {
+    const routeToParam = searchParams.get("routeTo");
+    if (routeToParam) {
+      const parts = routeToParam.split(",");
+      if (parts.length === 2) {
+        const lat = parseFloat(parts[0]);
+        const lng = parseFloat(parts[1]);
+        if (!isNaN(lat) && !isNaN(lng)) {
+          return [lat, lng];
+        }
+      }
+    }
+    return null;
+  }, [searchParams]);
 
   const filteredReports = useMemo(() => {
     if (statusFilter === "all") {
@@ -201,17 +218,19 @@ export function ReportMap() {
             ))}
           </div>
           
-          <button
-            type="button"
-            onClick={() => setShowHubs((prev) => !prev)}
-            className={`w-full sm:w-auto rounded-full px-4 py-2 text-sm font-medium transition-all duration-200 cursor-pointer border ${
-              showHubs
-                ? "border-[#15803d] bg-[#f0fdf4] text-[#166534]"
-                : "border-[var(--border)] bg-transparent text-[var(--muted)] hover:border-[#15803d] hover:text-[#15803d]"
-            }`}
-          >
-            • Collection Points
-          </button>
+          {role !== "operator" && (
+            <button
+              type="button"
+              onClick={() => setShowHubs((prev) => !prev)}
+              className={`w-full sm:w-auto rounded-full px-4 py-2 text-sm font-medium transition-all duration-200 cursor-pointer border ${
+                showHubs
+                  ? "border-[#15803d] bg-[#f0fdf4] text-[#166534]"
+                  : "border-[var(--border)] bg-transparent text-[var(--muted)] hover:border-[#15803d] hover:text-[#15803d]"
+              }`}
+            >
+              • Collection Points
+            </button>
+          )}
         </div>
 
 
@@ -226,6 +245,7 @@ export function ReportMap() {
                 setSelectedReportId(null);
               }}
               showHubs={showHubs}
+              routeToDestination={routeToDestination}
             />
           ) : (
             <div className="flex h-full items-center justify-center px-8 text-center text-sm leading-7 text-[var(--muted)]">

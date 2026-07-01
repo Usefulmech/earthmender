@@ -169,16 +169,30 @@ export function HistoryBoard() {
                     <p className="mt-2">{report.locationLabel}</p>
                   </div>
                   {report.latitude && report.longitude && (
-                    <Link
-                      href="/map"
-                      className="mt-2 inline-flex items-center gap-1.5 text-xs font-semibold text-[var(--accent)] hover:underline"
-                    >
-                      <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
-                      </svg>
-                      View on Map
-                    </Link>
+                    <div className="mt-2 flex items-center gap-4">
+                      <Link
+                        href="/map"
+                        className="inline-flex items-center gap-1.5 text-xs font-semibold text-[var(--accent)] hover:underline"
+                      >
+                        <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                        </svg>
+                        View on Map
+                      </Link>
+
+                      {role === "operator" && (
+                        <Link
+                          href={`/map?routeTo=${report.latitude},${report.longitude}`}
+                          className="inline-flex items-center gap-1.5 text-xs font-semibold text-[var(--foreground)] hover:text-[var(--accent)] hover:underline"
+                        >
+                          <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 5l7 7-7 7M5 5h3a5 5 0 015 5v7" />
+                          </svg>
+                          Get Directions
+                        </Link>
+                      )}
+                    </div>
                   )}
                 </div>
                 <div className="rounded-[1.3rem] bg-[var(--accent-surface)] px-4 py-3">

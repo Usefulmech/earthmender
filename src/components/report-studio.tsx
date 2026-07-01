@@ -738,10 +738,10 @@ export function ReportStudio() {
           </button>
         </div>
       ) : (
-        <div className="grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
+        <div className="grid gap-6 lg:grid-cols-[1.1fr_0.9fr] max-w-full overflow-x-hidden">
           <form
             onSubmit={handleSubmit}
-            className="surface-panel flex flex-col gap-5 p-5 sm:p-7"
+            className="surface-panel flex flex-col gap-5 p-5 sm:p-7 max-w-full overflow-hidden"
           >
             <div className="flex flex-wrap items-center gap-3">
               <span className="eyebrow">Citizen Report</span>

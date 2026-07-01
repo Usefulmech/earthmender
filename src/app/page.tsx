@@ -20,7 +20,7 @@ function GridBackground() {
 export default function Home() {
   return (
     <div className="min-h-screen text-[var(--foreground)] selection:bg-[var(--foreground)] selection:text-white">
-      <section className="relative overflow-hidden px-6 pt-0 pb-12 sm:px-8 sm:pt-2 sm:pb-16 flex flex-col items-center justify-start min-h-[60vh]">
+      <section className="relative overflow-hidden px-6 pt-0 pb-8 sm:px-8 sm:pt-2 sm:pb-12 flex flex-col items-center justify-start min-h-[50vh]">
         
         {/* Background Image & Gradient Overlay */}
         <div 
@@ -64,7 +64,7 @@ export default function Home() {
         </div>
       </section>
 
-      <section className="bg-[var(--border-light)] px-6 py-12 sm:px-8 sm:py-20 relative">
+      <section className="bg-[var(--border-light)] px-6 py-8 sm:px-8 sm:py-16 relative">
         <div className="mx-auto w-full relative z-10">
           <div className="mx-auto max-w-3xl text-center animate-fade-in-up" style={{ animationDelay: '0.1s' }}>
             <h2 className="font-display text-4xl font-bold tracking-tight sm:text-5xl">
