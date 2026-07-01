@@ -44,7 +44,7 @@ export default function Home() {
           <TypingHeading />
 
           <p className="mt-8 max-w-4xl text-xl leading-relaxed text-[var(--foreground)] font-medium bg-white/40 backdrop-blur-md px-8 py-4 rounded-2xl border border-white/50 shadow-sm">
-            A vibrant, community-powered platform where every voice matters <br className="hidden sm:block" /> and every hand helps mend our planet. No noise, just clean action.
+            An AI-powered community platform to report, track, and resolve environmental waste. <br className="hidden sm:block" /> Snap a photo, let our AI prioritize the cleanup, and watch your local environment mend.
           </p>
 
           <div className="mt-12 flex flex-col sm:flex-row justify-center gap-4 w-full sm:w-auto">
@@ -78,35 +78,50 @@ export default function Home() {
           <div className="mt-10 grid gap-6 md:grid-cols-3">
             {[
               {
-                icon: <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>,
-                title: "Diverse Voices",
-                body: "Designed to feel calm, readable, and approachable, so anyone can report and follow progress.",
+                icon: <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2v4m0 12v4M4.93 4.93l2.83 2.83m8.48 8.48l2.83 2.83M2 12h4m12 0h4M4.93 19.07l2.83-2.83m8.48-8.48l2.83-2.83"/></svg>,
+                title: "AI-Powered Reporting",
+                body: "Simply snap a photo of a waste hotspot. Our AI instantly analyzes the image to classify the waste and assign priority, routing it to the right cleanup operators.",
+                image: "https://images.unsplash.com/photo-1532996122724-e3c354a0b15b?auto=format&fit=crop&q=80&w=800",
               },
               {
                 icon: <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m8 3 4 8 5-5 5 15H2L8 3z"/></svg>,
-                title: "Shared Purpose",
-                body: "One queue, one map, one shared view of what needs action, so teams can move together.",
+                title: "Live Action Map",
+                body: "One real-time, interactive map of all reported hotspots. Track cleanup progress from initial report to final resolution, ensuring nothing is missed.",
+                image: "https://images.unsplash.com/photo-1524661135-423995f22d0b?auto=format&fit=crop&q=80&w=800",
               },
               {
                 icon: <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"/><path d="M2 12h20"/></svg>,
-                title: "Vibrant Future",
-                body: "Every report becomes memory. Every resolved case becomes momentum for the next clean day.",
+                title: "Community Momentum",
+                body: "Every resolved case creates momentum. Together, citizens and operators build a cleaner, greener environment for the future.",
+                image: "https://images.unsplash.com/photo-1528323273322-d81458248d40?auto=format&fit=crop&q=80&w=800",
               },
             ].map((card, index) => (
               <div
                 key={card.title}
-                className="surface-panel p-8 animate-fade-in-up hover:-translate-y-1 transition-transform"
+                className="group relative overflow-hidden rounded-[1.5rem] surface-panel min-h-[360px] animate-fade-in-up transition-all duration-300 hover:-translate-y-1 hover:shadow-xl flex flex-col justify-end border border-[var(--border)]"
                 style={{ animationDelay: `${0.2 + index * 0.1}s` }}
               >
-                <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[var(--foreground)] text-white shadow-lg">
-                  {card.icon}
+                {/* Background Image */}
+                <div 
+                  className="absolute inset-0 z-0 bg-cover bg-center transition-transform duration-700 group-hover:scale-105"
+                  style={{ backgroundImage: `url('${card.image}')` }}
+                />
+                
+                {/* Gradient Overlay for Text Legibility */}
+                <div className="absolute inset-0 z-10 bg-gradient-to-t from-[var(--background)] via-[var(--background)]/90 to-transparent opacity-90" />
+                
+                {/* Content */}
+                <div className="relative z-20 p-8 flex flex-col items-start text-left mt-auto">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-[var(--accent)] text-white shadow-lg mb-6">
+                    {card.icon}
+                  </div>
+                  <h3 className="text-2xl font-bold text-[var(--foreground)]">
+                    {card.title}
+                  </h3>
+                  <p className="mt-3 leading-relaxed text-[var(--muted)] font-medium">
+                    {card.body}
+                  </p>
                 </div>
-                <h3 className="mt-8 text-xl font-bold">
-                  {card.title}
-                </h3>
-                <p className="mt-4 leading-relaxed text-[var(--muted)]">
-                  {card.body}
-                </p>
               </div>
             ))}
           </div>

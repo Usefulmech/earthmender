@@ -114,6 +114,14 @@ async def detect(file: UploadFile = File(...)):
     for box in result.boxes:
         class_id = int(box.cls[0].item())
         label = names[class_id] if isinstance(names, list) else names.get(class_id, str(class_id))
+        try:
+            import json, ast
+            # Safely evaluate in case it's a string representation of a dict like "{'id': 1, 'name': 'plastic_bottle'}"
+            parsed = ast.literal_eval(label)
+            if isinstance(parsed, dict):
+                label = parsed.get("name", parsed.get("class", label))
+        except Exception:
+            pass
         confidence = float(box.conf[0].item())
         coords = [float(value) for value in box.xyxy[0].tolist()]
 

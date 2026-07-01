@@ -8,10 +8,10 @@
   --muted-light: #8b9c91;
   --border: #e0e6e2;
   --border-light: #edf2ee;
-  --accent: #059669;
-  --accent-hover: #047857;
-  --accent-light: #d1fae5;
-  --accent-surface: rgba(255, 255, 255, 0.45);
+  --accent: #16a34a;
+  --accent-hover: #15803d;
+  --accent-light: #dcfce7;
+  --accent-surface: rgba(22, 163, 74, 0.05);
   --secondary: #0ea5e9;
   --secondary-hover: #0284c7;
   --secondary-light: #e0f2fe;
@@ -249,4 +249,23 @@ a {
     opacity: 1;
     transform: scale(1);
   }
+}
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-4px); }
+  75% { transform: translateX(4px); }
+}
+
+.animate-shake {
+  animation: shake 0.3s cubic-bezier(.36,.07,.19,.97) both;
+}
+
+@keyframes pop {
+  0% { transform: scale(0.9); opacity: 0; }
+  50% { transform: scale(1.02); }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.animate-pop {
+  animation: pop 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
 }

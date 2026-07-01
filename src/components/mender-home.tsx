@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Link from "next/link";
+import { Sun, Sunrise, Sunset, Moon } from "lucide-react";
 
 import { useReports } from "@/hooks/use-reports";
 import { useAuth } from "@/components/auth-provider";
@@ -15,6 +16,26 @@ function formatDate(value: string) {
 export function MenderHome() {
   const { user, profile, refreshProfile } = useAuth();
   const { reports, hydrated } = useReports(user?.$id);
+
+  const [greeting, setGreeting] = useState({ text: "Welcome", Icon: Sun });
+  const [empowerMsg, setEmpowerMsg] = useState({ title: "Ready to make an impact?", body: "Your reports are actively keeping our community clean." });
+
+  useEffect(() => {
+    const hour = new Date().getHours();
+    if (hour >= 5 && hour < 12) {
+      setGreeting({ text: "Good morning", Icon: Sunrise });
+      setEmpowerMsg({ title: "Ready to make an impact today?", body: "Your reports are actively keeping our community clean." });
+    } else if (hour >= 12 && hour < 17) {
+      setGreeting({ text: "Good afternoon", Icon: Sun });
+      setEmpowerMsg({ title: "Keep up the great work.", body: "Every report counts towards a greener environment." });
+    } else if (hour >= 17 && hour < 21) {
+      setGreeting({ text: "Good evening", Icon: Sunset });
+      setEmpowerMsg({ title: "Thank you for today.", body: "We appreciate you looking out for our community." });
+    } else {
+      setGreeting({ text: "Good night", Icon: Moon });
+      setEmpowerMsg({ title: "Rest well.", body: "The Earthmender network never sleeps." });
+    }
+  }, []);
 
   useEffect(() => {
     refreshProfile().catch((err) => console.error("Failed to refresh profile:", err));
@@ -33,26 +54,36 @@ export function MenderHome() {
     (report) => report.status === "resolved",
   ).length;
 
+  const userName = profile?.name || user?.name || "Mender";
+
   return (
     <div className="flex flex-col gap-6">
       <section className="grid gap-5 lg:grid-cols-[1.05fr_0.95fr]">
-        <div className="surface-panel p-6 sm:p-8 animate-fade-in-up">
-          <span className="eyebrow">Mender</span>
-          <h1 className="mt-4 max-w-3xl font-display text-[2.7rem] leading-[0.96] tracking-[-0.06em] text-[var(--foreground)] sm:text-[4rem]">
-            Report it fast.
-          </h1>
-          <p className="mt-4 max-w-2xl text-sm leading-7 text-[var(--muted)] sm:text-base">
-            Add the image, place, and notes. earthmender keeps the proof and
-            assigns the priority.
-          </p>
+        <div className="surface-panel p-6 sm:p-8 animate-fade-in-up relative overflow-hidden flex flex-col justify-center">
+          {/* Subtle greeting gradient */}
+          <div className="absolute inset-0 bg-gradient-to-br from-[var(--accent-surface)] to-transparent pointer-events-none opacity-60" />
+          
+          <div className="relative z-10">
+            <div className="flex items-center gap-2 mb-3 text-[var(--accent)]">
+              <greeting.Icon className="w-5 h-5" />
+              <span className="eyebrow border-none bg-transparent p-0 text-[var(--muted)] font-semibold uppercase tracking-widest text-[0.65rem]">{greeting.text}, {userName}</span>
+            </div>
+            
+            <h1 className="mt-2 max-w-3xl font-display text-[2.4rem] leading-[1.05] tracking-[-0.05em] text-[var(--foreground)] sm:text-[3.2rem]">
+              {empowerMsg.title}
+            </h1>
+            <p className="mt-4 max-w-2xl text-sm leading-7 text-[var(--muted)] sm:text-base">
+              {empowerMsg.body}
+            </p>
 
-          <div className="mt-7 flex flex-col gap-3 sm:flex-row">
-            <Link href="/report" className="btn-primary">
-              Report
-            </Link>
-            <Link href="/map" className="btn-outline">
-              Map
-            </Link>
+            <div className="mt-8 flex flex-col gap-3 sm:flex-row">
+              <Link href="/report" className="btn-primary">
+                Report Now
+              </Link>
+              <Link href="/map" className="btn-outline">
+                Explore Network
+              </Link>
+            </div>
           </div>
         </div>
 

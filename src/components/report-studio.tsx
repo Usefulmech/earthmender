@@ -21,10 +21,10 @@ async function compressImage(file: File): Promise<File> {
       URL.revokeObjectURL(url);
       const canvas = document.createElement("canvas");
       let { width, height } = img;
-      
+
       const MAX_WIDTH = 1200;
       const MAX_HEIGHT = 1200;
-      
+
       if (width > height) {
         if (width > MAX_WIDTH) {
           height = Math.round((height * MAX_WIDTH) / width);
@@ -36,7 +36,7 @@ async function compressImage(file: File): Promise<File> {
           height = MAX_HEIGHT;
         }
       }
-      
+
       canvas.width = width;
       canvas.height = height;
       const ctx = canvas.getContext("2d");
@@ -44,7 +44,7 @@ async function compressImage(file: File): Promise<File> {
         resolve(file);
         return;
       }
-      
+
       ctx.drawImage(img, 0, 0, width, height);
       canvas.toBlob((blob) => {
         if (blob) {
@@ -212,7 +212,7 @@ export function ReportStudio() {
   const startCamera = async (mode: "user" | "environment" = "environment") => {
     setCameraError(null);
     setShowCameraFeed(true);
-    
+
     if (cameraStream) {
       cameraStream.getTracks().forEach((track) => track.stop());
     }
@@ -258,12 +258,12 @@ export function ReportStudio() {
 
   const capturePhoto = () => {
     if (!videoRef.current) return;
-    
+
     const video = videoRef.current;
     const canvas = document.createElement("canvas");
     canvas.width = video.videoWidth || 640;
     canvas.height = video.videoHeight || 480;
-    
+
     const ctx = canvas.getContext("2d");
     if (ctx) {
       ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
@@ -274,7 +274,7 @@ export function ReportStudio() {
           });
           capturedFile = await compressImage(capturedFile);
           setFile(capturedFile);
-          
+
           if (cameraStream) {
             cameraStream.getTracks().forEach((track) => track.stop());
             setCameraStream(null);
@@ -325,15 +325,15 @@ export function ReportStudio() {
         setGpsAccuracy(accuracy);
 
         let addressLabel = `GPS Geolocated Spot (within ${accuracy}m)`;
-        
+
         try {
           const response = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${nextLatitude}&lon=${nextLongitude}`);
           if (response.ok) {
             const data = await response.json();
             if (data && data.display_name) {
-               // Limit to first 3 parts of the address for readability
-               const parts = data.display_name.split(", ");
-               addressLabel = parts.slice(0, 3).join(", ");
+              // Limit to first 3 parts of the address for readability
+              const parts = data.display_name.split(", ");
+              addressLabel = parts.slice(0, 3).join(", ");
             }
           }
         } catch (err) {
@@ -392,7 +392,7 @@ export function ReportStudio() {
       if (!response.ok) {
         throw new Error(
           payload.error ||
-            "The detector could not complete this scan right now.",
+          "The detector could not complete this scan right now.",
         );
       }
 
@@ -476,14 +476,14 @@ export function ReportStudio() {
     const finalTitle = title.trim()
       ? title.trim()
       : detectorResult?.summary.dominantLabel
-      ? `${prettyLabel(detectorResult.summary.dominantLabel)} Sighting`
-      : "Waste Sighting";
+        ? `${prettyLabel(detectorResult.summary.dominantLabel)} Sighting`
+        : "Waste Sighting";
 
     const finalLocationLabel = locationLabel.trim()
       ? locationLabel.trim()
       : latitude && longitude
-      ? `GPS Geolocated Spot (within ${gpsAccuracy ? gpsAccuracy + "m" : "15m"})`
-      : "Standard Area";
+        ? `GPS Geolocated Spot (within ${gpsAccuracy ? gpsAccuracy + "m" : "15m"})`
+        : "Standard Area";
 
     const result = await createReport({
       id: crypto.randomUUID(),
@@ -561,7 +561,7 @@ export function ReportStudio() {
 
           <div className="relative z-10 p-6 bg-gradient-to-t from-black/80 via-black/40 to-transparent flex items-center justify-between gap-4">
             <div className="w-12 h-12" />
-            
+
             <button
               type="button"
               onClick={capturePhoto}
@@ -622,11 +622,10 @@ export function ReportStudio() {
             <div className="flex justify-center gap-3 items-center mb-4">
               <span className="eyebrow">Citizen Reporter</span>
               <span
-                className={`rounded-full px-3 py-1 text-xs transition-colors ${
-                  detectorStatus?.configured
-                    ? "bg-[var(--accent-light)] text-[var(--foreground)]"
-                    : "bg-[#f3ece2] text-[#8c5e2d]"
-                }`}
+                className={`rounded-full px-3 py-1 text-xs transition-colors ${detectorStatus?.configured
+                  ? "bg-[var(--accent-light)] text-[var(--foreground)]"
+                  : "bg-[#f3ece2] text-[#8c5e2d]"
+                  }`}
               >
                 {detectorStatus?.configured
                   ? "AI Detector connected"
@@ -674,70 +673,70 @@ export function ReportStudio() {
             </p>
 
 
-            </div>
+          </div>
 
-            <div className="mt-6 flex flex-col gap-3 w-full sm:flex-row sm:justify-center">
-              <button
-                type="button"
-                onClick={() => startCamera("environment")}
-                className="btn-primary flex items-center justify-center gap-2 px-6 py-3.5 rounded-full cursor-pointer"
-              >
-                <svg
-                  className="h-5 w-5"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"
-                  />
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"
-                  />
-                </svg>
-                Open Camera
-              </button>
-              <label
-                htmlFor="file-choose-input"
-                className="btn-outline flex items-center justify-center gap-2 px-6 py-3.5 rounded-full cursor-pointer"
-              >
-                <svg
-                  className="h-5 w-5"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
-                  />
-                </svg>
-                Choose Photo
-              </label>
-            </div>
-
+          <div className="mt-6 flex flex-col gap-3 w-full sm:flex-row sm:justify-center">
             <button
               type="button"
-              onClick={() => {
-                setShowFormManual(true);
-                fetchLocation();
-              }}
-              className="btn-outline mt-8 w-full sm:w-auto mx-auto !py-3 !px-6 text-sm flex items-center justify-center gap-2 cursor-pointer transition-all hover:bg-[var(--accent-surface)] hover:text-[var(--foreground)]"
+              onClick={() => startCamera("environment")}
+              className="btn-primary flex items-center justify-center gap-2 px-6 py-3.5 rounded-full cursor-pointer"
             >
-              <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+              <svg
+                className="h-5 w-5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"
+                />
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"
+                />
               </svg>
-              Report manually without photo
+              Open Camera
             </button>
+            <label
+              htmlFor="file-choose-input"
+              className="btn-outline flex items-center justify-center gap-2 px-6 py-3.5 rounded-full cursor-pointer"
+            >
+              <svg
+                className="h-5 w-5"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth={2}
+                  d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
+                />
+              </svg>
+              Choose Photo
+            </label>
           </div>
+
+          <button
+            type="button"
+            onClick={() => {
+              setShowFormManual(true);
+              fetchLocation();
+            }}
+            className="btn-outline mt-8 w-full sm:w-auto mx-auto !py-3 !px-6 text-sm flex items-center justify-center gap-2 cursor-pointer transition-all hover:bg-[var(--accent-surface)] hover:text-[var(--foreground)]"
+          >
+            <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+            </svg>
+            Report manually without photo
+          </button>
+        </div>
       ) : (
         <div className="grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
           <form
@@ -747,11 +746,10 @@ export function ReportStudio() {
             <div className="flex flex-wrap items-center gap-3">
               <span className="eyebrow">Citizen Report</span>
               <span
-                className={`rounded-full px-3 py-1 text-xs transition-colors ${
-                  detectorStatus?.configured
-                    ? "bg-[var(--accent-light)] text-[var(--foreground)]"
-                    : "bg-[#f3ece2] text-[#8c5e2d]"
-                }`}
+                className={`rounded-full px-3 py-1 text-xs transition-colors ${detectorStatus?.configured
+                  ? "bg-[var(--accent-light)] text-[var(--foreground)]"
+                  : "bg-[#f3ece2] text-[#8c5e2d]"
+                  }`}
               >
                 {detectorStatus?.configured
                   ? "AI Detector connected"
@@ -850,28 +848,26 @@ export function ReportStudio() {
                   </span>
                 ) : gpsAccuracy !== null ? (
                   <span
-                    className={`inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold ${
-                      gpsAccuracy <= 15
-                        ? "bg-[#ecfdf5] text-[#047857]"
-                        : gpsAccuracy <= 100
+                    className={`inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-semibold ${gpsAccuracy <= 15
+                      ? "bg-[#ecfdf5] text-[#047857]"
+                      : gpsAccuracy <= 100
                         ? "bg-[#fffbeb] text-[#d97706]"
                         : "bg-[#fef2f2] text-[#b91c1c]"
-                    }`}
+                      }`}
                   >
                     <span
-                      className={`h-1.5 w-1.5 rounded-full ${
-                        gpsAccuracy <= 15
-                          ? "bg-[#10b981]"
-                          : gpsAccuracy <= 100
+                      className={`h-1.5 w-1.5 rounded-full ${gpsAccuracy <= 15
+                        ? "bg-[#10b981]"
+                        : gpsAccuracy <= 100
                           ? "bg-[#f59e0b]"
                           : "bg-[#ef4444]"
-                      }`}
+                        }`}
                     />
                     {gpsAccuracy <= 15
                       ? `GPS Accurate (within ${gpsAccuracy}m)`
                       : gpsAccuracy <= 100
-                      ? `GPS Coarse (within ${gpsAccuracy}m)`
-                      : `Weak GPS (within ${gpsAccuracy}m)`}
+                        ? `GPS Coarse (within ${gpsAccuracy}m)`
+                        : `Weak GPS (within ${gpsAccuracy}m)`}
                   </span>
                 ) : (
                   <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs bg-[var(--border-light)] text-[var(--muted)] font-medium">
@@ -1011,11 +1007,10 @@ export function ReportStudio() {
                       key={signal.id}
                       type="button"
                       onClick={() => toggleSignal(signal.id)}
-                      className={`rounded-full border px-4 py-2 text-sm transition-all duration-200 cursor-pointer ${
-                        active
-                          ? "border-[var(--foreground)] bg-[var(--foreground)] text-white shadow-sm"
-                          : "border-[var(--border)] bg-white text-[var(--muted)] hover:border-[var(--accent)]/50"
-                      }`}
+                      className={`rounded-full border px-4 py-2 text-sm transition-all duration-200 cursor-pointer ${active
+                        ? "border-[var(--foreground)] bg-[var(--foreground)] text-white shadow-sm"
+                        : "border-[var(--border)] bg-white text-[var(--muted)] hover:border-[var(--accent)]/50"
+                        }`}
                     >
                       {signal.label}
                     </button>
@@ -1033,8 +1028,8 @@ export function ReportStudio() {
                 {saving
                   ? "Saving report..."
                   : detecting
-                  ? "Scanning image..."
-                  : "Submit report"}
+                    ? "Scanning image..."
+                    : "Submit report"}
               </button>
             </div>
 
@@ -1077,8 +1072,16 @@ export function ReportStudio() {
                           key={`${item.label}-${item.confidence}`}
                           className="rounded-full bg-white px-3 py-1.5 text-sm text-[var(--foreground)] border border-[var(--border)]"
                         >
-                          {item.label.replace(/_/g, " ")}
-                          {item.label === "manual_review"
+                          {(() => {
+                            try {
+                              const parsed = JSON.parse(item.label.replace(/'/g, '"'));
+                              const labelName = parsed.name || parsed.class || item.label;
+                              return labelName.replace(/_/g, " ");
+                            } catch (e) {
+                              return item.label.replace(/_/g, " ");
+                            }
+                          })()}
+                          {item.label === "manual_review" || (item as any).label === '{"manual_review"}'
                             ? ""
                             : ` · ${Math.round(item.confidence * 100)}%`}
                         </span>

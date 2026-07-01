@@ -175,43 +175,43 @@ export function ReportMap() {
           </span>
         </div>
 
-        <div className="mb-4 flex flex-wrap gap-2">
-          {[
-            { id: "all" as const, label: "All" },
-            { id: "open" as const, label: "Open" },
-            { id: "resolved" as const, label: "Resolved" },
-          ].map((item) => (
-            <button
-              key={item.id}
-              type="button"
-              onClick={() => {
-                setStatusFilter(item.id);
-                setSelectedGroupId(null);
-                setSelectedReportId(null);
-              }}
-              className={`rounded-full px-4 py-2 text-sm transition-all duration-200 cursor-pointer ${
-                statusFilter === item.id
-                  ? "bg-[var(--accent)] text-white shadow-sm"
-                  : "bg-[var(--border-light)] text-[var(--foreground)] hover:bg-[var(--border)]"
-              }`}
-            >
-              {item.label}
-            </button>
-          ))}
-          
-          <div className="ml-auto flex items-center gap-2">
-            <button
-              type="button"
-              onClick={() => setShowHubs((prev) => !prev)}
-              className={`rounded-full px-4 py-2 text-sm font-medium transition-all duration-200 cursor-pointer border ${
-                showHubs
-                  ? "border-[#15803d] bg-[#f0fdf4] text-[#166534]"
-                  : "border-[var(--border)] bg-transparent text-[var(--muted)] hover:text-[var(--foreground)]"
-              }`}
-            >
-              • Drop-off Hubs
-            </button>
+        <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+          <div className="flex flex-wrap gap-2">
+            {[
+              { id: "all" as const, label: "All" },
+              { id: "open" as const, label: "Open" },
+              { id: "resolved" as const, label: "Resolved" },
+            ].map((item) => (
+              <button
+                key={item.id}
+                type="button"
+                onClick={() => {
+                  setStatusFilter(item.id);
+                  setSelectedGroupId(null);
+                  setSelectedReportId(null);
+                }}
+                className={`rounded-full px-4 py-2 text-sm transition-all duration-200 cursor-pointer ${
+                  statusFilter === item.id
+                    ? "bg-[var(--accent)] text-white shadow-sm"
+                    : "bg-[var(--border-light)] text-[var(--foreground)] hover:bg-[var(--border)]"
+                }`}
+              >
+                {item.label}
+              </button>
+            ))}
           </div>
+          
+          <button
+            type="button"
+            onClick={() => setShowHubs((prev) => !prev)}
+            className={`w-full sm:w-auto rounded-full px-4 py-2 text-sm font-medium transition-all duration-200 cursor-pointer border ${
+              showHubs
+                ? "border-[#15803d] bg-[#f0fdf4] text-[#166534]"
+                : "border-[var(--border)] bg-transparent text-[var(--muted)] hover:border-[#15803d] hover:text-[#15803d]"
+            }`}
+          >
+            • Collection Points
+          </button>
         </div>
 
 
