@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { ReportMap } from "@/components/report-map";
 
 export default function MapPage() {
@@ -13,7 +14,9 @@ export default function MapPage() {
         </p>
       </section>
 
-      <ReportMap />
+      <Suspense fallback={<div className="surface-panel p-6 text-sm text-[var(--muted)]">Loading map...</div>}>
+        <ReportMap />
+      </Suspense>
     </div>
   );
 }
