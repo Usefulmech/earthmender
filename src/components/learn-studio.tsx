@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import confetti from "canvas-confetti";
 import { CheckCircle2, XCircle, Flame, Award, Medal, ThumbsUp } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -77,9 +77,14 @@ function resultsCopy(score: number, total: number): ResultsCopy {
 }
 
 export function LearnStudio() {
-  const [questions, setQuestions] = useState<QuizQuestion[]>(() =>
-    getRandomSample(12),
-  );
+  const [questions, setQuestions] = useState<QuizQuestion[]>([]);
+  const [hydrated, setHydrated] = useState(false);
+
+  useEffect(() => {
+    setQuestions(getRandomSample(12));
+    setHydrated(true);
+  }, []);
+
   const [step, setStep] = useState(0);
   const [score, setScore] = useState(0);
   const [streak, setStreak] = useState(0);
@@ -205,7 +210,7 @@ export function LearnStudio() {
               <motion.div 
                 className="h-full bg-[var(--accent)]" 
                 initial={{ width: 0 }}
-                animate={{ width: `${(step / questions.length) * 100}%` }}
+                animate={{ width: `${hydrated && questions.length > 0 ? (step / questions.length) * 100 : 0}%` }}
                 transition={{ duration: 0.3 }}
               />
             </div>
@@ -260,7 +265,7 @@ export function LearnStudio() {
               {/* Header with streak */}
               <div className="flex flex-wrap items-center justify-between gap-3 mt-2">
                 <p className="text-xs uppercase tracking-[0.18em] text-[var(--muted-light)] font-medium">
-                  Question {step + 1} of {questions.length}
+                  Question {step + 1} of {hydrated ? questions.length : 12}
                 </p>
                 <div className="flex items-center gap-3">
                   <AnimatePresence>
@@ -298,7 +303,7 @@ export function LearnStudio() {
                     className="flex flex-col flex-1"
                   >
                     <p className="text-xl leading-8 text-[var(--foreground)] font-medium">
-                      {current?.question ?? "No questions available yet."}
+                      {hydrated ? (current?.question ?? "No questions available yet.") : "Loading question..."}
                     </p>
 
                     <div className="mt-8 grid grid-cols-2 gap-4">
@@ -338,34 +343,54 @@ export function LearnStudio() {
                     <AnimatePresence>
                       {answered !== null && (
                         <motion.div 
-                          initial={{ opacity: 0, y: 10, scale: 0.95 }}
-                          animate={{ opacity: 1, y: 0, scale: 1 }}
-                          className={`mt-6 rounded-[1.4rem] px-5 py-4 text-sm shadow-sm ${
+                          initial={{ opacity: 0, scale: 0.9 }}
+                          animate={{ opacity: 1, scale: 1 }}
+                          exit={{ opacity: 0, scale: 0.9 }}
+                          className={`absolute inset-0 z-10 flex flex-col items-center justify-center rounded-[1.4rem] p-6 shadow-lg backdrop-blur-md ${
                             answered
-                              ? "bg-[var(--accent-light)] text-[var(--foreground)] animate-pop border border-[var(--accent)]/20"
-                              : "bg-[#f6ece4] text-[#8d5f33] animate-shake border border-[#8d5f33]/20"
+                              ? "bg-[#f0fdf4]/95 text-[var(--foreground)] border-2 border-[#16a34a]/30"
+                              : "bg-[#fef2f2]/95 text-[#991b1b] border-2 border-[#dc2626]/30"
                           }`}
                         >
-                          <div className="font-semibold mb-1 flex items-center gap-2 text-base">
-                            {answered ? <CheckCircle2 className="w-5 h-5 text-[var(--accent)]" /> : <XCircle className="w-5 h-5 text-red-500" />}
-                            {answered ? "Correct!" : "Not quite."}
-                          </div>
-                          <p className="leading-relaxed opacity-90 text-[var(--muted)]">{current.explanation}</p>
-                          
-                          <div className="mt-4 flex justify-end">
+                          <div className="flex flex-col items-center text-center max-w-sm">
+                            {answered ? (
+                              <motion.div
+                                initial={{ scale: 0, rotate: -45 }}
+                                animate={{ scale: 1, rotate: 0 }}
+                                transition={{ type: "spring", bounce: 0.5 }}
+                              >
+                                <CheckCircle2 className="w-16 h-16 text-[#16a34a] mb-4" />
+                              </motion.div>
+                            ) : (
+                              <motion.div
+                                initial={{ scale: 0 }}
+                                animate={{ scale: 1, x: [-10, 10, -10, 10, 0] }}
+                                transition={{ duration: 0.4 }}
+                              >
+                                <XCircle className="w-16 h-16 text-[#dc2626] mb-4" />
+                              </motion.div>
+                            )}
+                            
+                            <h3 className="font-display text-3xl font-bold mb-3">
+                              {answered ? "Spot on!" : "Not quite."}
+                            </h3>
+                            <p className="leading-relaxed text-[var(--muted)] mb-8 text-base">
+                              {current.explanation}
+                            </p>
+                            
                             {step >= questions.length - 1 ? (
                               <button
                                 type="button"
                                 onClick={handleResults}
-                                className="btn-primary py-2 px-6"
+                                className="btn-primary py-3 px-8 text-lg w-full shadow-md"
                               >
-                                See results
+                                See final results
                               </button>
                             ) : (
                               <button
                                 type="button"
                                 onClick={moveNext}
-                                className="btn-primary py-2 px-6"
+                                className="btn-primary py-3 px-8 text-lg w-full shadow-md"
                               >
                                 Next question
                               </button>

@@ -17,22 +17,22 @@ export function MenderHome() {
   const { user, profile, refreshProfile } = useAuth();
   const { reports, hydrated } = useReports(user?.$id);
 
-  const [greeting, setGreeting] = useState({ text: "Welcome", Icon: Sun });
+  const [greeting, setGreeting] = useState({ text: "Welcome", Icon: Sun, colorClass: "text-yellow-500 fill-yellow-100" });
   const [empowerMsg, setEmpowerMsg] = useState({ title: "Ready to make an impact?", body: "Your reports are actively keeping our community clean." });
 
   useEffect(() => {
     const hour = new Date().getHours();
     if (hour >= 5 && hour < 12) {
-      setGreeting({ text: "Good morning", Icon: Sunrise });
+      setGreeting({ text: "Good morning", Icon: Sunrise, colorClass: "text-orange-400" });
       setEmpowerMsg({ title: "Ready to make an impact today?", body: "Your reports are actively keeping our community clean." });
     } else if (hour >= 12 && hour < 17) {
-      setGreeting({ text: "Good afternoon", Icon: Sun });
+      setGreeting({ text: "Good afternoon", Icon: Sun, colorClass: "text-yellow-500 fill-yellow-100" });
       setEmpowerMsg({ title: "Keep up the great work.", body: "Every report counts towards a greener environment." });
     } else if (hour >= 17 && hour < 21) {
-      setGreeting({ text: "Good evening", Icon: Sunset });
+      setGreeting({ text: "Good evening", Icon: Sunset, colorClass: "text-orange-600" });
       setEmpowerMsg({ title: "Thank you for today.", body: "We appreciate you looking out for our community." });
     } else {
-      setGreeting({ text: "Good night", Icon: Moon });
+      setGreeting({ text: "Good night", Icon: Moon, colorClass: "text-indigo-400 fill-indigo-100/20" });
       setEmpowerMsg({ title: "Rest well.", body: "The Earthmender network never sleeps." });
     }
   }, []);
@@ -64,9 +64,12 @@ export function MenderHome() {
           <div className="absolute inset-0 bg-gradient-to-br from-[var(--accent-surface)] to-transparent pointer-events-none opacity-60" />
           
           <div className="relative z-10">
-            <div className="flex items-center gap-2 mb-3 text-[var(--accent)]">
-              <greeting.Icon className="w-5 h-5" />
-              <span className="eyebrow border-none bg-transparent p-0 text-[var(--muted)] font-semibold uppercase tracking-widest text-[0.65rem]">{greeting.text}, {userName}</span>
+            <div className="flex items-center gap-2 mb-3">
+              <greeting.Icon className={`w-6 h-6 filter drop-shadow-sm ${greeting.colorClass}`} />
+              <span className="text-[var(--muted)] font-medium text-sm tracking-wide">
+                {greeting.text},{" "}
+                <span className="capitalize text-[#16a34a] font-bold">{userName}</span>
+              </span>
             </div>
             
             <h1 className="mt-2 max-w-3xl font-display text-[2.4rem] leading-[1.05] tracking-[-0.05em] text-[var(--foreground)] sm:text-[3.2rem]">
