@@ -109,6 +109,24 @@ export async function createReport(report: ReportRecord, imageFile?: File | null
       data
     );
 
+    // Trigger push notifications
+    try {
+      fetch("/api/push/notify", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          title: "New Report Nearby",
+          body: `A new ${report.severity} severity report was submitted near ${report.locationLabel}.`,
+          locationLabel: report.locationLabel,
+          url: "/mender"
+        }),
+      });
+    } catch (e) {
+      console.error("Failed to trigger push notifications:", e);
+    }
+
     return mapDocumentToReport(doc);
   } catch (error) {
     console.error("Error creating report in Appwrite:", error);

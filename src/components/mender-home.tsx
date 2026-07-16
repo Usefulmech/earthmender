@@ -6,6 +6,7 @@ import { Sun, Sunrise, Sunset, Moon } from "lucide-react";
 
 import { useReports } from "@/hooks/use-reports";
 import { useAuth } from "@/components/auth-provider";
+import { NotificationPermission } from "@/components/notification-permission";
 
 function formatDate(value: string) {
   return new Intl.DateTimeFormat("en-NG", {
@@ -86,6 +87,10 @@ export function MenderHome() {
               <Link href="/map" className="btn-outline">
                 Explore Network
               </Link>
+            </div>
+            
+            <div className="mt-6 border-t border-[var(--border)] pt-4 max-w-sm">
+              <NotificationPermission />
             </div>
           </div>
         </div>

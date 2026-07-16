@@ -10,6 +10,7 @@ import { NavIcon } from "@/components/nav-icon";
 import { useUserRole } from "@/hooks/use-user-role";
 import { useAuth } from "@/components/auth-provider";
 import { baseNavItems, navItemsByRole } from "@/lib/content";
+import { PwaInstallPrompt } from "@/components/pwa-install-prompt";
 
 export function SiteShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
@@ -179,6 +180,7 @@ export function SiteShell({ children }: { children: React.ReactNode }) {
       </nav>
 
       <AuthModal isOpen={isAuthOpen} onClose={() => setIsAuthOpen(false)} />
+      <PwaInstallPrompt />
     </div>
   );
 }

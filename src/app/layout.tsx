@@ -23,6 +23,16 @@ export const metadata: Metadata = {
   title: "earthmender",
   description:
     "A calm, mobile-first waste reporting platform for capture, territory tracking, and environmental learning.",
+  manifest: "/manifest.json",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "earthmender",
+  },
+};
+
+export const viewport = {
+  themeColor: "#16a34a",
 };
 
 export default function RootLayout({

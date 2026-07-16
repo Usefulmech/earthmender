@@ -101,6 +101,7 @@ async function setup() {
     if (await safeCreate(() => databases.createStringAttribute(databaseId, profilesCollectionId, 'role', 50, true))) console.log(" - role added");
     if (await safeCreate(() => databases.createStringAttribute(databaseId, profilesCollectionId, 'companyName', 255, false))) console.log(" - companyName added");
     if (await safeCreate(() => databases.createStringAttribute(databaseId, profilesCollectionId, 'coverageLGA', 255, false))) console.log(" - coverageLGA added");
+    if (await safeCreate(() => databases.createStringAttribute(databaseId, profilesCollectionId, 'pushSubscription', 5000, false))) console.log(" - pushSubscription added");
     
     // To ensure trustScore has our new limits (1 to 10000, default 50), delete old one if exists
     try {
