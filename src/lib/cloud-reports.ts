@@ -120,7 +120,7 @@ export async function createReport(report: ReportRecord, imageFile?: File | null
           title: "New Report Nearby",
           body: `A new ${report.severity} severity report was submitted near ${report.locationLabel}.`,
           locationLabel: report.locationLabel,
-          url: "/mender"
+          url: "/operator"
         }),
       });
     } catch (e) {

@@ -16,6 +16,8 @@ const getImageUrl = (imageName: string) => {
   }
 };
 
+import { NotificationPermission } from "@/components/notification-permission";
+
 export function OperatorHome() {
   const router = useRouter();
   const { reports, hydrated } = useReports();
@@ -51,6 +53,10 @@ export function OperatorHome() {
             <Link href="/insights" className="btn-outline">
               Insights
             </Link>
+          </div>
+          
+          <div className="mt-6 border-t border-[var(--border)] pt-4 max-w-sm">
+            <NotificationPermission />
           </div>
         </div>
 

@@ -43,10 +43,9 @@ export async function POST(req: Request) {
 
     const databases = new Databases(client);
 
-    // Fetch menders who might be in this area
-    // For now, if locationLabel matches coverageLGA, or just fetch all menders who have a subscription
+    // Fetch operators who might be in this area
     const queries = [
-      Query.equal("role", "mender"),
+      Query.equal("role", "operator"),
       Query.isNotNull("pushSubscription")
     ];
 
@@ -55,7 +54,7 @@ export async function POST(req: Request) {
     let sentCount = 0;
 
     for (const doc of profiles.documents) {
-      // Very basic matching - if the report location contains the collector's LGA, or if no LGA is set (send to all for MVP)
+      // Very basic matching - if the report location contains the operator's LGA, or if no LGA is set
       const collectorArea = doc.coverageLGA?.toLowerCase() || "";
       const reportArea = locationLabel?.toLowerCase() || "";
       
@@ -67,7 +66,7 @@ export async function POST(req: Request) {
           const payload = JSON.stringify({
             title,
             body,
-            url: url || "/mender"
+            url: url || "/operator"
           });
 
           await webpush.sendNotification(subscription, payload);
