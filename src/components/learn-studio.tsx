@@ -300,44 +300,46 @@ export function LearnStudio() {
                     animate={{ opacity: 1, x: 0 }}
                     exit={{ opacity: 0, x: -20 }}
                     transition={{ duration: 0.2 }}
-                    className="flex flex-col flex-1"
+                    className="grid flex-1"
                   >
-                    <p className="text-xl leading-8 text-[var(--foreground)] font-medium">
-                      {hydrated ? (current?.question ?? "No questions available yet.") : "Loading question..."}
-                    </p>
+                    <div className="col-start-1 row-start-1 flex flex-col justify-start pb-4">
+                      <p className="text-xl leading-8 text-[var(--foreground)] font-medium">
+                        {hydrated ? (current?.question ?? "No questions available yet.") : "Loading question..."}
+                      </p>
 
-                    <div className="mt-8 grid grid-cols-2 gap-4">
-                      <button
-                        type="button"
-                        onClick={() => answer(true)}
-                        disabled={answered !== null || !current}
-                        className={`group relative flex flex-col items-center justify-center gap-3 rounded-2xl border-2 p-6 transition-all duration-200 
-                          ${answered !== null 
-                            ? (answered && current.answer === true) || (!answered && current.answer === true)
-                              ? "border-[var(--accent)] bg-[var(--accent-light)] shadow-sm"
-                              : "border-[var(--border)] bg-white opacity-40"
-                            : "border-[var(--border)] bg-white hover:border-[var(--accent)] hover:shadow-md cursor-pointer"
-                          }`}
-                      >
-                        <CheckCircle2 className={`w-8 h-8 ${answered !== null && current.answer === true ? "text-[var(--accent)]" : "text-[var(--muted-light)] group-hover:text-[var(--accent)]"}`} />
-                        <span className="font-semibold text-[var(--foreground)]">True</span>
-                      </button>
-                      
-                      <button
-                        type="button"
-                        onClick={() => answer(false)}
-                        disabled={answered !== null || !current}
-                        className={`group relative flex flex-col items-center justify-center gap-3 rounded-2xl border-2 p-6 transition-all duration-200 
-                          ${answered !== null 
-                            ? (answered && current.answer === false) || (!answered && current.answer === false)
-                              ? "border-[var(--accent)] bg-[var(--accent-light)] shadow-sm"
-                              : "border-[var(--border)] bg-white opacity-40"
-                            : "border-[var(--border)] bg-white hover:border-[var(--accent)] hover:shadow-md cursor-pointer"
-                          }`}
-                      >
-                        <XCircle className={`w-8 h-8 ${answered !== null && current.answer === false ? "text-[var(--accent)]" : "text-[var(--muted-light)] group-hover:text-[var(--accent)]"}`} />
-                        <span className="font-semibold text-[var(--foreground)]">False</span>
-                      </button>
+                      <div className="mt-8 grid grid-cols-2 gap-4">
+                        <button
+                          type="button"
+                          onClick={() => answer(true)}
+                          disabled={answered !== null || !current}
+                          className={`group relative flex flex-col items-center justify-center gap-3 rounded-2xl border-2 p-6 transition-all duration-200 
+                            ${answered !== null 
+                              ? (answered && current.answer === true) || (!answered && current.answer === true)
+                                ? "border-[var(--accent)] bg-[var(--accent-light)] shadow-sm"
+                                : "border-[var(--border)] bg-white opacity-40"
+                              : "border-[var(--border)] bg-white hover:border-[var(--accent)] hover:shadow-md cursor-pointer"
+                            }`}
+                        >
+                          <CheckCircle2 className={`w-8 h-8 ${answered !== null && current.answer === true ? "text-[var(--accent)]" : "text-[var(--muted-light)] group-hover:text-[var(--accent)]"}`} />
+                          <span className="font-semibold text-[var(--foreground)]">True</span>
+                        </button>
+                        
+                        <button
+                          type="button"
+                          onClick={() => answer(false)}
+                          disabled={answered !== null || !current}
+                          className={`group relative flex flex-col items-center justify-center gap-3 rounded-2xl border-2 p-6 transition-all duration-200 
+                            ${answered !== null 
+                              ? (answered && current.answer === false) || (!answered && current.answer === false)
+                                ? "border-[var(--accent)] bg-[var(--accent-light)] shadow-sm"
+                                : "border-[var(--border)] bg-white opacity-40"
+                              : "border-[var(--border)] bg-white hover:border-[var(--accent)] hover:shadow-md cursor-pointer"
+                            }`}
+                        >
+                          <XCircle className={`w-8 h-8 ${answered !== null && current.answer === false ? "text-[var(--accent)]" : "text-[var(--muted-light)] group-hover:text-[var(--accent)]"}`} />
+                          <span className="font-semibold text-[var(--foreground)]">False</span>
+                        </button>
+                      </div>
                     </div>
 
                     <AnimatePresence>
@@ -346,20 +348,20 @@ export function LearnStudio() {
                           initial={{ opacity: 0, scale: 0.9 }}
                           animate={{ opacity: 1, scale: 1 }}
                           exit={{ opacity: 0, scale: 0.9 }}
-                          className={`absolute inset-0 z-10 flex flex-col items-center justify-center rounded-[1.4rem] p-6 shadow-lg backdrop-blur-md ${
+                          className={`col-start-1 row-start-1 z-10 flex flex-col items-center justify-center rounded-[1.4rem] p-6 sm:p-8 shadow-lg backdrop-blur-md ${
                             answered
                               ? "bg-[#f0fdf4]/95 text-[var(--foreground)] border-2 border-[#16a34a]/30"
                               : "bg-[#fef2f2]/95 text-[#991b1b] border-2 border-[#dc2626]/30"
                           }`}
                         >
-                          <div className="flex flex-col items-center text-center max-w-sm">
+                          <div className="flex flex-col items-center text-center max-w-sm w-full mx-auto">
                             {answered ? (
                               <motion.div
                                 initial={{ scale: 0, rotate: -45 }}
                                 animate={{ scale: 1, rotate: 0 }}
                                 transition={{ type: "spring", bounce: 0.5 }}
                               >
-                                <CheckCircle2 className="w-16 h-16 text-[#16a34a] mb-4" />
+                                <CheckCircle2 className="w-14 h-14 sm:w-16 sm:h-16 text-[#16a34a] mb-3 sm:mb-4" />
                               </motion.div>
                             ) : (
                               <motion.div
@@ -367,14 +369,14 @@ export function LearnStudio() {
                                 animate={{ scale: 1, x: [-10, 10, -10, 10, 0] }}
                                 transition={{ duration: 0.4 }}
                               >
-                                <XCircle className="w-16 h-16 text-[#dc2626] mb-4" />
+                                <XCircle className="w-14 h-14 sm:w-16 sm:h-16 text-[#dc2626] mb-3 sm:mb-4" />
                               </motion.div>
                             )}
                             
-                            <h3 className="font-display text-3xl font-bold mb-3">
+                            <h3 className="font-display text-2xl sm:text-3xl font-bold mb-2 sm:mb-3">
                               {answered ? "Spot on!" : "Not quite."}
                             </h3>
-                            <p className="leading-relaxed text-[var(--muted)] mb-8 text-base">
+                            <p className="leading-relaxed text-[var(--muted)] mb-6 sm:mb-8 text-sm sm:text-base">
                               {current.explanation}
                             </p>
                             
@@ -382,7 +384,7 @@ export function LearnStudio() {
                               <button
                                 type="button"
                                 onClick={handleResults}
-                                className="btn-primary py-3 px-8 text-lg w-full shadow-md"
+                                className="btn-primary py-3 sm:py-3.5 px-8 text-base w-full shadow-md font-semibold"
                               >
                                 See final results
                               </button>
@@ -390,7 +392,7 @@ export function LearnStudio() {
                               <button
                                 type="button"
                                 onClick={moveNext}
-                                className="btn-primary py-3 px-8 text-lg w-full shadow-md"
+                                className="btn-primary py-3 sm:py-3.5 px-8 text-base w-full shadow-md font-semibold"
                               >
                                 Next question
                               </button>
